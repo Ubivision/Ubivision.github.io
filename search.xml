@@ -62,7 +62,7 @@ h_{\theta}(x)=\theta_{0}+\theta_{1} x_{1}+\theta_{2} x_{2}+\ldots+\theta_{n} x_{
     <title>Hexo无法正确显示LaTeX数学公式的解决方法</title>
     <url>/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<h2 id="起因">起因</h2>
-<p>昨天晚上写好了第一篇博文，准备在本地看看效果，想的没啥问题就直接deploy了，好家伙公式一个都显示不对。我在网上搜寻了一下原因，大致意思就是：Hexo自带的Markdown渲染器会使得LaTeX与Markdown冲突，从而使得一些LaTeX书写的内容不能正确转义，造成数学公式无法正确显示。</p>
+<p>昨天晚上写好了第一篇博文，准备在本地看看效果，想的没啥问题就直接deploy了，好家伙公式一个都显示不对。我在网上搜寻了一下原因，大致意思就是：Hexo自带的Markdown渲染器会使得LaTeX与Markdown冲突，从而使得一些LaTeX书写的内容不能正确转义，造成数学公式无法正确显示。<span id="more"></span></p>
 <h2 id="解决方法">解决方法</h2>
 <p>我搜寻了许多解决方案，不过归根到底，就是要更换Hexo自带的Markdown渲染器。关于Hexo的几种渲染器的介绍，我找到了一篇比较详细的，<a href="https://bugwz.com/2019/09/17/hexo-markdown-renderer/#%E4%B8%80-%E5%BC%95%E8%A8%80">在这里</a>。然后网上的大部分方法是：更换渲染器为kramed，再更改一下此渲染器的转义规则，就OK了。不过我在尝试了上述方法后，发现并不行，行内公式成功显示了，公式块内的公式却直接消失了，我也不知道是什么原因。在试错了多种方法之后，我终于找到了一种适用于我的解决方案，那就是pandoc渲染器：</p>
 <h3 id="卸载hexo自带渲染器">1.卸载Hexo自带渲染器</h3>
