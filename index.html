@@ -286,13 +286,13 @@
 <h3 id="安装pandoc">2.安装pandoc</h3>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-renderer-pandoc</span><br></pre></td></tr></table></figure>
 <p>与其他渲染器不同的是，pandoc直接用npm进行安装后无法使用，需要再通过手动下载安装包安装一个pandoc的发行版后，才可以正常使用，<a target="_blank" rel="noopener" href="https://github.com/jgm/pandoc/releases">链接在此</a>。如果是Windows系统的话，选择这个：</p>
-<img src="/.com//07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/pandoc.jpg" class>
+<img src="/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/pandoc.jpg" class>
 <p>安装完成后，不出意外就可以使用了。</p>
 <h2 id="存在的bug-解决方法">存在的bug &amp; 解决方法</h2>
 <p>使用Pandoc作为渲染器虽然解决了公式块的显示问题，但是行内公式的显示依然存在问题，我在误打误撞中发现，行内公式的一般格式为：​</p>
-<img src="/.com//07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/fomula-vanila.jpg" class>
+<img src="/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/fomula-vanila.jpg" class>
 <p>可能因为我是从数学公式公式转换LaTeX的网站上直接复制的代码，在公式的前后，都有一个空格字符，问题就出在这里，如果去掉这两个空格，行内公式的渲染就不会有任何问题（至少我目前没有发现），也就是这样：</p>
-<img src="/.com//07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/fomula-fix.jpg" class>
+<img src="/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/fomula-fix.jpg" class>
 <p>这样写之后，再通过pandoc渲染，就没有问题了。</p>
 
       
