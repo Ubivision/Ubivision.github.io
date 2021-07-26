@@ -22,25 +22,29 @@
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-<meta name="description" content="记录经验">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Messing arounder">
-<meta property="og:url" content="http://example.com/index.html">
+<meta name="description" content="数据集来源 数据集来自Kaggle的机器学习入门题目--Titanic。这道题目本来应该用分类器算法进行预测，考虑到只是用来入门，所以就用在了线性回归的实践之中，在最后的输出使用阈值法即可。 数据预处理 1.读取数据 &amp; 验证数据完整性 数据不一定都是完整的，可能会有空数据的存在： 1234# 读取数据train &#x3D; pd.read_csv(&amp;#x27;data&#x2F;train.cs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习实践——多元线性回归">
+<meta property="og:url" content="http://example.com/2021/07/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/index.html">
 <meta property="og:site_name" content="Messing arounder">
-<meta property="og:description" content="记录经验">
+<meta property="og:description" content="数据集来源 数据集来自Kaggle的机器学习入门题目--Titanic。这道题目本来应该用分类器算法进行预测，考虑到只是用来入门，所以就用在了线性回归的实践之中，在最后的输出使用阈值法即可。 数据预处理 1.读取数据 &amp; 验证数据完整性 数据不一定都是完整的，可能会有空数据的存在： 1234# 读取数据train &#x3D; pd.read_csv(&amp;#x27;data&#x2F;train.cs">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-25T05:50:52.000Z">
+<meta property="article:modified_time" content="2021-07-26T06:24:24.097Z">
 <meta property="article:author" content="Rex">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="线性回归">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/07/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/07/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/","path":"2021/07/25/机器学习实践——多元线性回归/","title":"机器学习实践——多元线性回归"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Messing arounder</title>
+<title>机器学习实践——多元线性回归 | Messing arounder</title>
   
 
 
@@ -132,7 +136,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -145,6 +149,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E6%9D%A5%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">数据集来源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">数据预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE-%E9%AA%8C%E8%AF%81%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">1.读取数据 &amp; 验证数据完整性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A1%AB%E5%85%85%E7%A9%BA%E6%95%B0%E6%8D%AE"><span class="nav-number">2.2.</span> <span class="nav-text">2.填充空数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%95%B0%E5%AD%97%E5%8C%96%E8%A1%A8%E7%A4%BA"><span class="nav-number">2.3.</span> <span class="nav-text">3.数据数字化表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E7%BC%A9%E6%94%BE%E7%89%B9%E5%BE%81%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">2.4.</span> <span class="nav-text">4.特征缩放（特征归一化）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">代价函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D"><span class="nav-number">4.</span> <span class="nav-text">梯度下降</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">5.</span> <span class="nav-text">开始训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E7%BB%93%E6%9E%9C"><span class="nav-number">6.</span> <span class="nav-text">保存结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%A8%A1%E5%9E%8B%E5%9C%A8%E8%AE%AD%E7%BB%83%E9%9B%86%E4%B8%8A%E7%9A%84%E5%87%86%E7%A1%AE%E7%8E%87"><span class="nav-number">7.</span> <span class="nav-text">计算模型在训练集上的准确率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E9%9B%86%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">8.</span> <span class="nav-text">测试集数据预处理+归一化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E9%A2%84%E6%B5%8B%E7%BB%93%E6%9E%9C-%E5%AF%BC%E5%87%BAkaggle%E8%A6%81%E6%B1%82%E7%9A%84%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%96%87%E4%BB%B6"><span class="nav-number">9.</span> <span class="nav-text">保存预测结果 &amp; 导出Kaggle要求的格式的文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -203,16 +208,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -225,9 +231,9 @@
       <meta itemprop="name" content="Messing arounder">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/07/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" class="post-title-link" itemprop="url">机器学习实践——多元线性回归</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          机器学习实践——多元线性回归
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -257,6 +263,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
       </div>
       <div class="post-meta">
     <span class="post-meta-item" title="本文字数">
@@ -282,7 +295,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="数据集来源">数据集来源</h2>
+        <h2 id="数据集来源">数据集来源</h2>
 <p>数据集来自Kaggle的机器学习入门题目--<a target="_blank" rel="noopener" href="https://www.kaggle.com/c/titanic/overview">Titanic</a>。这道题目本来应该用分类器算法进行预测，考虑到只是用来入门，所以就用在了线性回归的实践之中，在最后的输出使用阈值法即可。</p>
 <h2 id="数据预处理">数据预处理</h2>
 <h3 id="读取数据-验证数据完整性">1.读取数据 &amp; 验证数据完整性</h3>
@@ -329,7 +342,6 @@ h_{\theta}(x)=\theta_{0}+\theta_{1} x_{1}+\theta_{2} x_{2}+\ldots+\theta_{n} x_{
 <h2 id="总结">总结</h2>
 <p>经过上述过程，最终在训练集上准确率为79.3%，在测试集上准确率为76.8%。可以改进之处我觉得有两个方面，一方面是对于特征的分析和选择，另一方面就是方法，使用专门的分类器算法势必会让准确率有所提升。</p>
 
-      
     </div>
 
     
@@ -337,12 +349,24 @@ h_{\theta}(x)=\theta_{0}+\theta_{1} x_{1}+\theta_{2} x_{2}+\ldots+\theta_{n} x_{
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag"># 线性回归</a>
+          </div>
+
+        
+
     </footer>
-      
+    
+     <div><center>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+     <div class="social-share" data-sites="weibo, qq, qzone,wechat"></div>
+     <script src="http://apps.bdimg.com/libs/jquery/1.8.2/jquery.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+  </center></div>  
   </article>
 </div>
+
 
 
 

@@ -1523,19 +1523,29 @@ pre code {
   display: inline-block;
 }
 .site-author-image {
-  border: 1px solid #eee;
+  display: block;
+  margin: 0 auto;
+  padding: $site-author-image-padding;
   max-width: 120px;
-  padding: 2px;
+  height: $site-author-image-height;
+  border: 1px solid #eee;
+  border-radius: 60%;
+  transition: 2.5s all;
+}
+.site-author-image:hover {
+  transform: rotate(360deg);
 }
 .site-author-name {
+  margin: 0;
+  text-align: $site-author-name-align;
   color: var(--text-color);
   font-weight: 600;
-  margin: 0;
 }
 .site-description {
-  color: #999;
-  font-size: 0.8125em;
   margin-top: 0;
+  text-align: $site-description-align;
+  font-size: 0.8125em;
+  color: #999;
 }
 .links-of-author a {
   font-size: 0.8125em;
@@ -1821,6 +1831,12 @@ pre code {
   color: #4A5057;
   display: inline-block;
   margin: 0 5px;
+}
+.busuanzi-count #busuanzi_container_site_uv {
+  display: none;
+}
+.busuanzi-count #busuanzi_container_site_pv {
+  display: none;
 }
 @-moz-keyframes icon-animate {
   0%, 100% {
@@ -2300,6 +2316,9 @@ pre code {
   .post-meta-item-text {
     display: none;
   }
+}
+#busuanzi_container_page_pv {
+  display: none;
 }
 .post-nav {
   border-top: 1px solid #eee;
@@ -2815,6 +2834,13 @@ mark.search-keyword {
   border-bottom: 1px dashed #ff2a2a;
   color: #ff2a2a;
   font-weight: bold;
+}
+mjx-container[jax="CHTML"][display="true"],
+.has-jax {
+  overflow: auto hidden;
+}
+mjx-container[display="true"] + br {
+  display: none;
 }
 .use-motion .animated {
   animation-fill-mode: none;
