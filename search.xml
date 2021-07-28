@@ -30,6 +30,84 @@
       </tags>
   </entry>
   <entry>
+    <title>机器学习实践——逻辑回归</title>
+    <url>/2021/07/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</url>
+    <content><![CDATA[<h2 id="概述">概述</h2>
+<p>本篇主要的目的是：从实践角度去理解逻辑回归的过程（其中的公式、表达式均以向量化的形式出现），数据集依旧使用Titanic。<span id="more"></span></p>
+<h2 id="逻辑回归与线性回归的联系">逻辑回归与线性回归的联系</h2>
+<p>逻辑回归模型，其实就是在线性回归的基础上，套了一个Sigmoid函数，换句话说：逻辑回归模型的表达式是一个两层复合函数，其中内层是线性回归模型，外层是Sigmoid函数。通过这种做法，使得线性回归的输出被压缩在0到1之间，以便完成二分类任务。</p>
+<p><span class="math display">\[
+\begin{aligned}
+Sigmoid函数：H &amp;=\frac{1}{1+e^{-Z}} \\
+线性模型：Z &amp;=X W
+\end{aligned}
+\]</span> 其中的<span class="math inline">\(X\)</span>​​​的维度是(m, n+1)(n代表特征个数，m代表数据个数，下同)，<span class="math inline">\(W\)</span>​​​​​​​​的维度是(n+1, 1)，n+1中“1”的含义是：偏置b。所以<span class="math inline">\(z\)</span>​​​的维度是(m, 1)，<span class="math inline">\(H\)</span>​​​不涉及矩阵间运算，故维度也是(m, 1)</p>
+<h2 id="逻辑回归代价函数的理解">逻辑回归代价函数的理解</h2>
+<p>不论是什么模型，我们都希望代价函数能够做到：在模型预测正确的时候代价函数值为0，预测错误的时候代价函数值为错误值和真实值的差距。但是在逻辑回归中，因为解决的是二分类问题，是离散的，结果只有正反两种，如果继续采用MSE作为代价函数，那么在预测错误时所反应出的“有多错”，就不够严重，换句话说，MSE在二分类问题中对待预测错误时的惩罚力度不够。所以这时候就需要另一种代价函数，对待预测错误时能够狠狠地进行惩罚，预测结果越接近真实值，惩罚力度就越小，所以在逻辑回归中，代价函数是以对数函数的形式出现的，可以分为两种情况讨论。</p>
+<p>当真实值为1时，此时代价函数为： <span class="math display">\[
+Cost=-ln(H)
+\]</span> 图像为：</p>
+<img src="/2021/07/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/%E7%9C%9F%E5%AE%9E%E5%80%BC%E4%B8%BA1.jpg" class>
+<p>当真实值为0时，此时代价函数为： <span class="math display">\[
+Cost=-ln(1-H)
+\]</span> 图像为：</p>
+<img src="/2021/07/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/%E7%9C%9F%E5%AE%9E%E5%80%BC%E4%B8%BA0.jpg" class>
+<p>将两种情况结合起来考虑，就得到了逻辑回归的代价函数： <span class="math display">\[
+Cost=-Yln(H)-(1-Y)ln(1-H)
+\]</span> 当然，定义中的代价函数还有一个常数系数1/m，因为上述内容是在阐述原理，所以没有加。</p>
+<p>代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">x, y, theta</span>):</span></span><br><span class="line">    m = x.shape[<span class="number">0</span>]</span><br><span class="line">    z = x.dot(theta)</span><br><span class="line">    h = <span class="number">1</span> / (np.exp(-z) + <span class="number">1</span>)</span><br><span class="line">    cost = -<span class="number">1</span>/m*np.<span class="built_in">sum</span>((y*np.log(h)+(<span class="number">1</span>-y)*np.log(<span class="number">1</span>-h)))</span><br><span class="line">    <span class="keyword">return</span> cost</span><br></pre></td></tr></table></figure>
+<h2 id="梯度下降">梯度下降</h2>
+<h3 id="求偏导">1.求偏导</h3>
+<p>思路还是那个思路，对代价函数中的参数求偏导得到梯度，然后参数进行反梯度方向的更新。故首先要做的就是对代价函数求导。观察代价函数可以发现，如果要对参数<span class="math inline">\(w\)</span>​​进行求导，其实就是进行复合函数求导： <span class="math display">\[
+\begin{gathered}
+\frac{d C o s t}{d W}=\frac{d C}{d H} * \frac{d H}{d Z} * \frac{d Z}{d W} \\
+=X^{T} *\left\{\left(-\frac{Y}{H}-\frac{1-Y}{1-H} * -1\right) * H(1-H)\right\} \\
+=X^{T} *\left\{\left(\frac{\left(-Y(1-H)+H\left(1-Y\right)\right)}{H(1-H)}\right) * H(1-H)\right\} \\
+=X^{T}\left\{\left(-Y+Y H+H-H Y\right)\right\} \\
+=X^{T}\left(H-Y\right)
+\end{gathered}
+\]</span> 上述运算是直接基于矩阵的运算，乍一看可能非常劝退，但是细看其实并不复杂，我们一部分一部分拆开来看： <span class="math display">\[
+\begin{gathered}
+Cost=-Yln(H)-(1-Y)ln(1-H)\\
+\frac{d C}{d H}=(-\frac{Y}{H}-\frac{1-Y}{1-H} *-1)
+\end{gathered}
+\]</span> 这部分是代价函数对Sigomid函数<span class="math inline">\(H\)</span>求导，涉及到<span class="math inline">\(lnx\)</span>​​​的导数和复合函数求导法则。 <span class="math display">\[
+\begin{gathered}
+H=\frac{1}{1+e^{-Z}} \\
+\frac{d H}{d Z}=\frac{-e^{-Z}*-1}{\left(1+e^{-Z}\right)^{2}}=\frac{1+e^{-Z}-1}{\left(1+e^{-Z}\right)^{2}}=\frac{1}{1+e^{-Z}}\left(1-\frac{1}{1+e^{-Z}}\right)=H(1-H)
+\end{gathered}
+\]</span> 这部分是Sigmoid函数对线性回归模型<span class="math inline">\(Z\)</span>求导，涉及到分式求导法则和<span class="math inline">\(e^{-x}\)</span>​​​的导数。 <span class="math display">\[
+\begin{gathered}
+Z=XW\\
+\frac{d Z}{d W}=X
+\end{gathered}
+\]</span> 这部分是线性回归模型<span class="math inline">\(Z\)</span>对参数<span class="math inline">\(W\)</span>的导数。</p>
+<p>在这些都清楚了之后，剩下的步骤就是运算了，没有什么理解上的难度。</p>
+<p>这时候我们再回过头看化简过后的结果： <span class="math display">\[
+\begin{gathered}
+\frac{d C o s t}{d W}=X^{T}(H-Y) \\
+代入H：\\
+\frac{d C o s t}{d W}=X^{T}\left(\frac{1}{1+e^{-X W}}-Y\right)
+\end{gathered}
+\]</span> 可能在这里会有疑问，上面才解释过<span class="math inline">\(Z\)</span>​对参数<span class="math inline">\(W\)</span>​的导数是<span class="math inline">\(X\)</span>​，这里怎么变成了<span class="math inline">\(X^{T}\)</span>​？而且本来应该右乘，这里为什么变成了左乘？这里先分析一下<span class="math inline">\(H-Y\)</span>​的维度，<span class="math inline">\(H\)</span>​由上述内容内容可知，<span class="math inline">\(H\)</span>​的维度是(m, 1)，<span class="math inline">\(Y\)</span>​的维度也是(m, 1)，所以<span class="math inline">\(H-Y\)</span>​的维度自然也是(m, 1)。<span class="math inline">\(X\)</span>​的维度是(m, n+1)，如果这时候直接右乘<span class="math inline">\(X\)</span>​，是无法相乘的，所以需要转置且变为左乘，这时候<span class="math inline">\(\frac{d C o s t}{d W}\)</span>​​​​​的维度是(n+1, 1)，n+1也正好是参数的个数。</p>
+<h3 id="参数更新">2. 参数更新</h3>
+<p><span class="math display">\[
+W=W-alpha*\frac{d C o s t}{d W}
+\]</span></p>
+<p>代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradientDescent</span>(<span class="params">x, y, theta, alpha, num_iters</span>):</span></span><br><span class="line">    m = x.shape[<span class="number">0</span>]</span><br><span class="line">    cost_history = np.zeros(num_iters)</span><br><span class="line">    z = x.dot(theta)</span><br><span class="line">    h = <span class="number">1</span> / (np.exp(-z) + <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        theta = theta - alpha/m*np.dot(x.T, (h-y))</span><br><span class="line">        cost_history[i] = cost(x, y, theta)</span><br><span class="line">    <span class="keyword">return</span> theta, cost_history</span><br></pre></td></tr></table></figure>
+<p>完整代码及数据请<a href="https://github.com/Ubivision/ML-ALgorithms">点击这里</a></p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>分类问题</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>机器学习实践——多元线性回归</title>
     <url>/2021/07/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E5%A4%9A%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</url>
     <content><![CDATA[<h2 id="数据集来源">数据集来源</h2>
@@ -76,6 +154,7 @@ h_{\theta}(x)=\theta_{0}+\theta_{1} x_{1}+\theta_{2} x_{2}+\ldots+\theta_{n} x_{
 <p>方法同训练集。</p>
 <h2 id="保存预测结果-导出kaggle要求的格式的文件">保存预测结果 &amp; 导出Kaggle要求的格式的文件</h2>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">result = x_test.dot(theta) <span class="comment"># 保存结果</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(result)):</span><br><span class="line">    <span class="keyword">if</span> result[i] &gt;= <span class="number">0.5</span>:</span><br><span class="line">        result[i] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        result[i] = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">passengerId = test[<span class="string">&#x27;PassengerId&#x27;</span>].values.reshape(-<span class="number">1</span>, <span class="number">1</span>) <span class="comment"># 导出文件</span></span><br><span class="line"><span class="built_in">list</span> = np.hstack((passengerId, result))</span><br><span class="line">column = [<span class="string">&#x27;PassengerId&#x27;</span>, <span class="string">&#x27;Survived&#x27;</span>]</span><br><span class="line">resultFile = pd.DataFrame(columns=column, data=<span class="built_in">list</span>)</span><br><span class="line">resultFile.to_csv(<span class="string">&#x27;data/submission.csv&#x27;</span>, index=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<p>完整代码及数据请<a href="https://github.com/Ubivision/ML-ALgorithms">点击这里</a></p>
 <h2 id="总结">总结</h2>
 <p>经过上述过程，最终在训练集上准确率为79.3%，在测试集上准确率为76.8%。可以改进之处我觉得有两个方面，一方面是对于特征的分析和选择，另一方面就是方法，使用专门的分类器算法势必会让准确率有所提升。</p>
 ]]></content>
@@ -84,7 +163,7 @@ h_{\theta}(x)=\theta_{0}+\theta_{1} x_{1}+\theta_{2} x_{2}+\ldots+\theta_{n} x_{
       </categories>
       <tags>
         <tag>机器学习</tag>
-        <tag>线性回归</tag>
+        <tag>分类问题</tag>
       </tags>
   </entry>
 </search>
