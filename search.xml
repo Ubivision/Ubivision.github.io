@@ -85,6 +85,7 @@ h_{\theta}(x)=\theta_{0}+\theta_{1} x_{1}+\theta_{2} x_{2}+\ldots+\theta_{n} x_{
       </categories>
       <tags>
         <tag>机器学习</tag>
+        <tag>预测问题</tag>
         <tag>分类问题</tag>
       </tags>
   </entry>
@@ -157,6 +158,70 @@ W=W-alpha*\frac{d C o s t}{d W}
 <p>代码实现如下：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradientDescent</span>(<span class="params">x, y, theta, alpha, num_iters</span>):</span></span><br><span class="line">    m = x.shape[<span class="number">0</span>]</span><br><span class="line">    cost_history = np.zeros(num_iters)</span><br><span class="line">    z = x.dot(theta)</span><br><span class="line">    h = <span class="number">1</span> / (np.exp(-z) + <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        theta = theta - alpha/m*np.dot(x.T, (h-y))</span><br><span class="line">        cost_history[i] = cost(x, y, theta)</span><br><span class="line">    <span class="keyword">return</span> theta, cost_history</span><br></pre></td></tr></table></figure>
 <p>完整代码及数据请<a href="https://github.com/Ubivision/ML-ALgorithms">点击这里</a></p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>分类问题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习总结——感知机</title>
+    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
+    <content><![CDATA[<h2 id="关键字">关键字</h2>
+<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降</p>
+<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
+<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
+<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
+<h2 id="感知机学习策略">感知机学习策略</h2>
+<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
+-y_i(wx_i+b)&gt;0
+\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
+L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
+\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
+\begin{gathered}
+\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
+\frac{dL}{db}=-\sum_{x_i\in M}y_i
+\end{gathered}
+\]</span></p>
+<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
+<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
+<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
+\begin{gathered}
+w=w+\eta y_ix_i\\
+b=b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
+<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
+\begin{gathered}
+w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
+b=\sum_{i=1}^{N}\alpha _iy_i
+\end{gathered}
+\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
+<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+b = b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+代入\alpha _i=n_i\eta：\\
+\alpha = n_i\eta + \eta=\eta (n_i+1)
+\end{gathered}
+\]</span> 就相当于某点被误分类的次数+1。</p>
 ]]></content>
       <categories>
         <category>机器学习</category>

@@ -160,7 +160,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -173,7 +173,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -215,6 +215,147 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Rex">
+      <meta itemprop="description" content="记录经验">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Messing arounder">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/" class="post-title-link" itemprop="url">机器学习总结——感知机</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-07-31 09:10:52 / 修改时间：10:55:00" itemprop="dateCreated datePublished" datetime="2021-07-31T09:10:52+08:00">2021-07-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="关键字">关键字</h2>
+<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降</p>
+<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
+<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
+<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
+<h2 id="感知机学习策略">感知机学习策略</h2>
+<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
+-y_i(wx_i+b)&gt;0
+\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
+L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
+\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
+\begin{gathered}
+\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
+\frac{dL}{db}=-\sum_{x_i\in M}y_i
+\end{gathered}
+\]</span></p>
+<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
+<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
+<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
+\begin{gathered}
+w=w+\eta y_ix_i\\
+b=b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
+<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
+\begin{gathered}
+w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
+b=\sum_{i=1}^{N}\alpha _iy_i
+\end{gathered}
+\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
+<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+b = b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+代入\alpha _i=n_i\eta：\\
+\alpha = n_i\eta + \eta=\eta (n_i+1)
+\end{gathered}
+\]</span> 就相当于某点被误分类的次数+1。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+      
+  </article>
+</div>
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -238,10 +379,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-07-28 10:42:02 / 修改时间：18:13:54" itemprop="dateCreated datePublished" datetime="2021-07-28T10:42:02+08:00">2021-07-28</time>
+      <time title="创建时间：2021-07-28 10:42:02" itemprop="dateCreated datePublished" datetime="2021-07-28T10:42:02+08:00">2021-07-28</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-07-31 10:55:18" itemprop="dateModified" datetime="2021-07-31T10:55:18+08:00">2021-07-31</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -442,7 +589,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-07-28 18:14:16" itemprop="dateModified" datetime="2021-07-28T18:14:16+08:00">2021-07-28</time>
+        <time title="修改时间：2021-07-31 09:11:42" itemprop="dateModified" datetime="2021-07-31T09:11:42+08:00">2021-07-31</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -529,14 +676,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">7k</span>
+    <span title="站点总字数">9k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6 分钟</span>
+    <span title="站点阅读时长">8 分钟</span>
   </span>
 </div>
 <div class="busuanzi-count">
