@@ -85,7 +85,7 @@ h_{\theta}(x)=\theta_{0}+\theta_{1} x_{1}+\theta_{2} x_{2}+\ldots+\theta_{n} x_{
       </categories>
       <tags>
         <tag>机器学习</tag>
-        <tag>预测问题</tag>
+        <tag>回归问题</tag>
         <tag>分类问题</tag>
         <tag>监督学习</tag>
         <tag>判别模型</tag>
@@ -201,7 +201,166 @@ W=W-alpha*\frac{d C o s t}{d W}
       </categories>
       <tags>
         <tag>机器学习</tag>
+        <tag>分类问题</tag>
         <tag>无监督学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习总结——决策树</title>
+    <url>/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E5%86%B3%E7%AD%96%E6%A0%91/</url>
+    <content><![CDATA[<h2 id="概述">概述</h2>
+<p>决策树（decision tree）是一种基本的分类与回归方法。<span id="more"></span>决策树学习主要包含三个步骤：<strong>特征选择、决策树生成和决策树剪枝</strong>。在分步骤介绍决策树之前，我们先来看看决策树是什么样的。</p>
+<h2 id="决策树模型">决策树模型</h2>
+<p>决策树由结点 (node) 和有向边 (directed edge)组成。结点有两种类型: 内部结点(internal node）和叶结点 (leaf node)。内部结点表示一个特征或属性，叶结点表示一个类，如下图所示：</p>
+<img src="/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E5%86%B3%E7%AD%96%E6%A0%91/DT.jpg" class>
+<h2 id="特征选择">特征选择</h2>
+<p>特征选择的准则通常是信息增益或信息增益比</p>
+<h3 id="熵条件熵">1.熵、条件熵</h3>
+<p>设<span class="math inline">\(X\)</span>是一个取有限个数值的离散随机变量，其概率分布为 <span class="math display">\[
+P(x=x_{i})=p_{i},\qquad i=1,2,...,n
+\]</span> 则随机变量<span class="math inline">\(X\)</span>的熵定义为 <span class="math display">\[
+H(x)=-\sum_{i=1}^{n}p_ilogp_i
+\]</span> 因为熵值依赖于<span class="math inline">\(X\)</span>的分布，而与<span class="math inline">\(X\)</span>的取值无关，所以也可以将<span class="math inline">\(X\)</span>的熵记作<span class="math inline">\(H(p)\)</span>： <span class="math display">\[
+H(p)=-\sum_{i=1}^{n}p_ilogp_i
+\]</span> 条件熵<span class="math inline">\(H(Y\mid X)\)</span> 表示在己知随机变量<span class="math inline">\(X\)</span>的条件下随机变量<span class="math inline">\(Y\)</span>的不确定性。随机变量<span class="math inline">\(X\)</span>给定的条件下随机变量<span class="math inline">\(Y\)</span>的条件熵（Cconditional entropy）<span class="math inline">\(H(Y\mid X)\)</span> ， 定义为<span class="math inline">\(X\)</span>给定条件下<span class="math inline">\(Y\)</span>的条件概率分布的熵对<span class="math inline">\(X\)</span>的数学期望 <span class="math display">\[
+H(Y\mid X)=\sum_{i=1}^{n}p_iH(Y\mid X=x_i)
+\]</span> 当熵和条件熵中的概率由数据估计（特别是极大似然估计）得到时，所对应的熵与条件熵分别称为经验熵（ empirical entropy）和经验条件熵（empirical conditional entropy）。</p>
+<h3 id="信息增益">2.信息增益</h3>
+<p><strong>定义：</strong>特征<span class="math inline">\(A\)</span>​​对训练数据集D的信息增益<span class="math inline">\(g(D,A)\)</span>​​，定义为集合<span class="math inline">\(D\)</span>​​的经验熵<span class="math inline">\(H(D)\)</span>​​与特征<span class="math inline">\(A\)</span>​​​给定条件下的经验熵<span class="math inline">\(H(D\mid A)\)</span>​​之差： <span class="math display">\[
+g(D,A)=H(D)-H(D\mid A)
+\]</span> 经验熵<span class="math inline">\(H(D)\)</span>​表示对数据集<span class="math inline">\(D\)</span>​进行分类的不确定性，经验条件熵<span class="math inline">\(H(D\mid A)\)</span>表示在特征<span class="math inline">\(A\)</span>给定的条件下对数据集<span class="math inline">\(D\)</span>进行分类的不确定性。所以换句话说，信息增益表示由于特征<span class="math inline">\(A\)</span>​而使得对数据集<span class="math inline">\(D\)</span>​​​的分类的不确定性减少的程度。显然，信息增益大的特征具有更强的分类能力。（信息增益算法实例见统计学习方法P75）</p>
+<h3 id="信息增益比">3.信息增益比</h3>
+<p>以信息增益作为划分训练数据集的特征，存在偏向于选择取值较多的特征的问题。比如说，假如训练数据集中存在特征“ID”，仅仅是用来为每一个实例标号的，取值从1到n。毋庸置疑，“ID”这一特征肯定是取值最多的特征之一，这时候使用信息增益的方法划分数据集，就可能会选择到“ID”这一特征，但实际上“ID”是一种对分类毫无价值的特征，我们不应该选择它作为的数据集的划分。</p>
+<p>使用信息增益比（information gain ratio）可以对这一问题进行校正，这也是特征选择的另一准则。</p>
+<p>定义：特征<span class="math inline">\(A\)</span>对训练数据集D的信息增益比<span class="math inline">\(g_R(D,A)\)</span>，定义为其信息增益<span class="math inline">\(g(D,A)\)</span>与训练数据集<span class="math inline">\(D\)</span>关于特征<span class="math inline">\(A\)</span>的熵<span class="math inline">\(H_A(D)\)</span>之比： <span class="math display">\[
+g_R(D,A)=\frac{g(D,A)}{H_A{D}}
+\]</span></p>
+<h2 id="生成决策树">生成决策树</h2>
+<h3 id="id3算法">1.ID3算法</h3>
+<p><strong>核心思想：</strong>在决策树各个结点上应用信息增益准则选择特征，递归构建决策树。</p>
+<p><strong>算法步骤：</strong></p>
+<p>输入：训练数据集<span class="math inline">\(D\)</span>，特征集合<span class="math inline">\(A\)</span>，阈值<span class="math inline">\(\epsilon\)</span></p>
+<p>输出：决策树<span class="math inline">\(T\)</span></p>
+<h4 id="特殊情况">1.特殊情况</h4>
+<p>1.如果<span class="math inline">\(D\)</span>​中所有实例同属一类<span class="math inline">\(C_k\)</span>​，则决策树<span class="math inline">\(T\)</span>​为单节点树，将类<span class="math inline">\(C_k\)</span>​作为该结点的类标记，返回<span class="math inline">\(T\)</span>，算法结束​；</p>
+<p>2.如果<span class="math inline">\(D\)</span>​中没有特征，则决策树<span class="math inline">\(T\)</span>​为单节点树，将类<span class="math inline">\(C_k\)</span>​作为该结点的类标记，返回<span class="math inline">\(T\)</span>​，算法结束；</p>
+<p>3.用信息增益方法计算<span class="math inline">\(A\)</span>中各特征对<span class="math inline">\(D\)</span>的信息增益，选择信息增益最大的特征<span class="math inline">\(A_g\)</span>，如果<span class="math inline">\(A_g\)</span>小于阈值<span class="math inline">\(\epsilon\)</span>，则决策树<span class="math inline">\(T\)</span>为单节点树，将<span class="math inline">\(D\)</span>中实例数目最大的类<span class="math inline">\(C_{k}\)</span>作为该结点的类标记，返回T，算法结束；</p>
+<h4 id="一般情况">2.一般情况</h4>
+<p>1.用信息增益方法计算<span class="math inline">\(A\)</span>中各特征对<span class="math inline">\(D\)</span>的信息增益，选择信息增益最大的特征<span class="math inline">\(A_g\)</span>，对于<span class="math inline">\(A_g\)</span>的每个可能值<span class="math inline">\(a_{i}\)</span>，将<span class="math inline">\(D\)</span>分割为若干非空子集<span class="math inline">\(D_{i}\)</span>，将<span class="math inline">\(D_{i}\)</span>​​中实例数最大的类作为标记，构建子结点；</p>
+<p>2.对第<span class="math inline">\(i\)</span>个子结点，以<span class="math inline">\(D_{i}\)</span>为训练集，<span class="math inline">\(A-A{g}\)</span>为特征集，递归调用上述步骤，得到子树<span class="math inline">\(T_{i}\)</span>，返回<span class="math inline">\(T_{i}\)</span>​。​</p>
+<h3 id="c4.5算法">2.C4.5算法</h3>
+<p><strong>核心思想：</strong>在决策树各个结点上应用信息增益比准则选择特征，递归构建决策树。</p>
+<p><strong>算法步骤：</strong>C4.5算法的步骤和ID3基本一致，不再重复。</p>
+<h2 id="决策树剪枝">决策树剪枝</h2>
+<p><strong>原因：</strong>防止过拟合。</p>
+<p><strong>核心思想：</strong>递归地从树的叶结点向上回缩，比较叶结点回缩到其父节点之前与之后树的整体损失函数大小，如果剪枝后的损失函数小于剪枝前的损失函数，则进行剪枝。（损失函数见统计学习方法P79）</p>
+<h2 id="cart算法">CART算法</h2>
+<p>分类与回归树 (classification and regression tree)，简称CART，也是一种决策树，既可以用于分类，也可以用于回归，是在给定输入随机变量<span class="math inline">\(X\)</span>条件下输出随机变量<span class="math inline">\(Y\)</span>​​​的条件概率分布的学习方法。CART决策树是二叉树内部结点特征的取值为"是"和"否"，左分支是取值为“是”的分支，右分支是取值为“否”的分支。这样的决策树等价于递归地二分每个特征，将特征空间划分为有限个单元，并在这些单元上确定预测的概率分布，也就是在输入给定的条件下输出的条件概率分布。</p>
+<h3 id="最小二乘回归树生成算法">最小二乘回归树生成算法</h3>
+<p>我个人理解这一过程，用伪代码说明：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">最小MSE = <span class="number">0</span></span><br><span class="line">最小MSE对应特征 = null</span><br><span class="line">最小MSE对应特征的最优划分点 = null</span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> 特征集:</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> 当前特征可能的划分点:</span><br><span class="line">        计算当前MSE</span><br><span class="line">        <span class="keyword">if</span>(当前MSE&lt;最小MSE)：</span><br><span class="line">            最小MSE = 当前MSE</span><br><span class="line">            最小MSE对应特征 = j</span><br><span class="line">            最小MSE对应特征的最优划分点 = s</span><br></pre></td></tr></table></figure>
+<p>其中，j为最优切分变量，s为最优切分点。</p>
+<h3 id="基尼指数">基尼指数</h3>
+<p>分类问题中，假设有<span class="math inline">\(K\)</span>个类，样本点属于第<span class="math inline">\(k\)</span>类的概率为<span class="math inline">\(p_{k}\)</span>​​，则概率分布的基尼指数定义为 <span class="math display">\[
+\begin{equation}
+ \operatorname{Gini}(p)=\sum_{k=1}^{K} p_{k}\left(1-p_{k}\right)=1-\sum_{k=1}^{K} p_{k}^{2} 
+\end{equation}
+\]</span> 对于二分类问题，若样本点属于第1个类的概率是<span class="math inline">\(P\)</span>​ 则概率分布的基尼指数为 <span class="math display">\[
+Gini(p)=2p(1-p)
+\]</span> 对于给定的样本集合<span class="math inline">\(D\)</span>， 其基尼指数为 <span class="math display">\[
+\begin{equation}
+ \operatorname{Gini}(D)=1-\sum_{k=1}^{K}\left(\frac{\left|C_{k}\right|}{|D|}\right)^{2} 
+\end{equation}
+\]</span> 这里， <span class="math inline">\(C_{k}\)</span>是<span class="math inline">\(D\)</span>中属于第<span class="math inline">\(k\)</span>类的样本子集，<span class="math inline">\(K\)</span>​是类的个数。</p>
+<p>当样本集合<span class="math inline">\(D\)</span>被特征<span class="math inline">\(A\)</span>是否取某值被划分为<span class="math inline">\(D_1\)</span>和<span class="math inline">\(D_2\)</span>，则在特征<span class="math inline">\(A\)</span>的条件下，集合<span class="math inline">\(D\)</span>的基尼指数定义为 <span class="math display">\[
+\begin{equation}
+ \operatorname{Gini}(D, A)=\frac{\left|D_{1}\right|}{|D|} \operatorname{Gini}\left(D_{1}\right)+\frac{\left|D_{2}\right|}{|D|} \operatorname{Gini}\left(D_{2}\right) 
+\end{equation}
+\]</span> 基尼指数<span class="math inline">\(Gini(D)\)</span>表示集合<span class="math inline">\(D\)</span>的不确定性，基尼指数<span class="math inline">\(Gini(D， A)\)</span>表示经<span class="math inline">\(A = α\)</span>分割后集合<span class="math inline">\(D\)</span>的不确定性。基尼指数值越大，样本集合的不确定性也就越大，这一点与熵相似。</p>
+<h3 id="cart算法-1">CART算法</h3>
+<p><strong>算法步骤：</strong></p>
+<p>1.设结点的训练数据集为<span class="math inline">\(D\)</span>， 计算现有特征对该数据集的基尼指数。此时，对每一个特征<span class="math inline">\(A\)</span>， 对其可能取的每个值<span class="math inline">\(\alpha\)</span>，根据样本点对<span class="math inline">\(A=\alpha\)</span>的测试为“是”或“否” 将<span class="math inline">\(D\)</span>分割成<span class="math inline">\(D_1\)</span>和<span class="math inline">\(D_2\)</span>两部分， 计算<span class="math inline">\(A= α\)</span>时的基尼指数。</p>
+<p>2.在所有可能的特征<span class="math inline">\(A\)</span>以及它们所有可能的切分点<span class="math inline">\(α\)</span>中，选择基尼指数最小的特征及其对应的切分点作为最优特征与最优切分点。依最优特征与最优切分点，从现结点生成两个子结点，将训练数据集依特征分配到两个子结点中去。</p>
+<p>3.对两个子结点递归地调用1、2，直至满足停止条件。</p>
+<p>4.生成CART决策树。</p>
+<h2 id="cart剪枝">CART剪枝</h2>
+<p>详见统计学习方法P86、87</p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>回归问题</tag>
+        <tag>分类问题</tag>
+        <tag>监督学习</tag>
+        <tag>判别模型</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习总结——感知机</title>
+    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
+    <content><![CDATA[<h2 id="关键字">关键字</h2>
+<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降<span id="more"></span></p>
+<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
+<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
+<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
+<h2 id="感知机学习策略">感知机学习策略</h2>
+<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
+-y_i(wx_i+b)&gt;0
+\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
+L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
+\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
+\begin{gathered}
+\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
+\frac{dL}{db}=-\sum_{x_i\in M}y_i
+\end{gathered}
+\]</span></p>
+<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
+<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
+<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
+\begin{gathered}
+w=w+\eta y_ix_i\\
+b=b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
+<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
+\begin{gathered}
+w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
+b=\sum_{i=1}^{N}\alpha _iy_i
+\end{gathered}
+\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
+<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+b = b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+代入\alpha _i=n_i\eta：\\
+\alpha = n_i\eta + \eta=\eta (n_i+1)
+\end{gathered}
+\]</span> 就相当于某点被误分类的次数+1。</p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>分类问题</tag>
+        <tag>监督学习</tag>
+        <tag>判别模型</tag>
       </tags>
   </entry>
   <entry>
@@ -294,72 +453,6 @@ P_{\lambda}\left(Y=c_{k}\right)=\frac{\sum_{i=1}^{N} I\left(y_{i}=c_{k}\right)+\
         <tag>分类问题</tag>
         <tag>监督学习</tag>
         <tag>生成模型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习总结——感知机</title>
-    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
-    <content><![CDATA[<h2 id="关键字">关键字</h2>
-<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降<span id="more"></span></p>
-<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
-<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
-<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
-<h2 id="感知机学习策略">感知机学习策略</h2>
-<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
--y_i(wx_i+b)&gt;0
-\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
-L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
-\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
-\begin{gathered}
-\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
-\frac{dL}{db}=-\sum_{x_i\in M}y_i
-\end{gathered}
-\]</span></p>
-<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
-<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
-<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
-<p>步骤：</p>
-<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
-<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
-<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
-\begin{gathered}
-w=w+\eta y_ix_i\\
-b=b+\eta y_i
-\end{gathered}
-\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
-<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
-<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
-\begin{gathered}
-w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
-b=\sum_{i=1}^{N}\alpha _iy_i
-\end{gathered}
-\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
-<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
-<p>步骤：</p>
-<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
-<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
-<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
-\begin{gathered}
-\alpha _i = \alpha _i+\eta\\
-b = b+\eta y_i
-\end{gathered}
-\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
-<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
-\begin{gathered}
-\alpha _i = \alpha _i+\eta\\
-代入\alpha _i=n_i\eta：\\
-\alpha = n_i\eta + \eta=\eta (n_i+1)
-\end{gathered}
-\]</span> 就相当于某点被误分类的次数+1。</p>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>分类问题</tag>
-        <tag>监督学习</tag>
-        <tag>判别模型</tag>
       </tags>
   </entry>
 </search>
