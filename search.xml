@@ -206,6 +206,72 @@ W=W-alpha*\frac{d C o s t}{d W}
       </tags>
   </entry>
   <entry>
+    <title>机器学习总结——感知机</title>
+    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
+    <content><![CDATA[<h2 id="关键字">关键字</h2>
+<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降<span id="more"></span></p>
+<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
+<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
+<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
+<h2 id="感知机学习策略">感知机学习策略</h2>
+<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
+-y_i(wx_i+b)&gt;0
+\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
+L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
+\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
+\begin{gathered}
+\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
+\frac{dL}{db}=-\sum_{x_i\in M}y_i
+\end{gathered}
+\]</span></p>
+<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
+<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
+<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
+\begin{gathered}
+w=w+\eta y_ix_i\\
+b=b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
+<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
+\begin{gathered}
+w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
+b=\sum_{i=1}^{N}\alpha _iy_i
+\end{gathered}
+\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
+<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+b = b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+代入\alpha _i=n_i\eta：\\
+\alpha = n_i\eta + \eta=\eta (n_i+1)
+\end{gathered}
+\]</span> 就相当于某点被误分类的次数+1。</p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>分类问题</tag>
+        <tag>监督学习</tag>
+        <tag>判别模型</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>机器学习总结——决策树</title>
     <url>/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E5%86%B3%E7%AD%96%E6%A0%91/</url>
     <content><![CDATA[<h2 id="概述">概述</h2>
@@ -298,72 +364,6 @@ Gini(p)=2p(1-p)
         <tag>机器学习</tag>
         <tag>分类问题</tag>
         <tag>回归问题</tag>
-        <tag>监督学习</tag>
-        <tag>判别模型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习总结——感知机</title>
-    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
-    <content><![CDATA[<h2 id="关键字">关键字</h2>
-<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降<span id="more"></span></p>
-<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
-<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
-<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
-<h2 id="感知机学习策略">感知机学习策略</h2>
-<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
--y_i(wx_i+b)&gt;0
-\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
-L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
-\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
-\begin{gathered}
-\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
-\frac{dL}{db}=-\sum_{x_i\in M}y_i
-\end{gathered}
-\]</span></p>
-<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
-<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
-<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
-<p>步骤：</p>
-<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
-<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
-<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
-\begin{gathered}
-w=w+\eta y_ix_i\\
-b=b+\eta y_i
-\end{gathered}
-\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
-<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
-<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
-\begin{gathered}
-w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
-b=\sum_{i=1}^{N}\alpha _iy_i
-\end{gathered}
-\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
-<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
-<p>步骤：</p>
-<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
-<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
-<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
-\begin{gathered}
-\alpha _i = \alpha _i+\eta\\
-b = b+\eta y_i
-\end{gathered}
-\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
-<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
-\begin{gathered}
-\alpha _i = \alpha _i+\eta\\
-代入\alpha _i=n_i\eta：\\
-\alpha = n_i\eta + \eta=\eta (n_i+1)
-\end{gathered}
-\]</span> 就相当于某点被误分类的次数+1。</p>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>分类问题</tag>
         <tag>监督学习</tag>
         <tag>判别模型</tag>
       </tags>
@@ -481,10 +481,10 @@ e_{m}&amp;=\sum_{i=1}^{N} P\left(G_{m}\left(x_{i}\right) \neq y_{i}\right)\\
 &amp;=\sum_{i=1}^{N} w_{m i} I\left(G_{m}\left(x_{i}\right) \neq y_{i}\right)\\
 &amp;=\sum_{G_m(x_i)\neq y_i}w_mi
 \end{aligned}
-\]</span> ​ 其中<span class="math inline">\(w_mi\)</span>​表示第<span class="math inline">\(m\)</span>​轮中第<span class="math inline">\(i\)</span>​个实例的权值，<span class="math inline">\(\sum_{i=1}^{N}w_mi=1\)</span>​， <span class="math inline">\(\sum_{i=1}^{N} w_{m i} I\left(G_{m}\left(x_{i}\right)\neq y_{i}\right)\)</span>​是被<span class="math inline">\(G_m(x)\)</span>​误 分类样本的权值之和。</p>
+\]</span> 其中<span class="math inline">\(w_mi\)</span>​表示第<span class="math inline">\(m\)</span>​轮中第<span class="math inline">\(i\)</span>​个实例的权值，<span class="math inline">\(\sum_{i=1}^{N}w_mi=1\)</span>​， <span class="math inline">\(\sum_{i=1}^{N} w_{m i} I\left(G_{m}\left(x_{i}\right)\neq y_{i}\right)\)</span>​是被<span class="math inline">\(G_m(x)\)</span>​误分类样本的权值之和。</p>
 <p>​ （c）计算<span class="math inline">\(G_m(x)\)</span>​的系数（基本分类器的权值，权值越大代表该分类器越有“话语权”） <span class="math display">\[
 \alpha _m = \frac{1}{2}ln\frac{1-e_M}{e_m}
-\]</span> ​ 可以发现，当<span class="math inline">\(e_m\le \frac{1}{2}\)</span>时，系数<span class="math inline">\(\alpha _m\ge 0\)</span>，且<span class="math inline">\(\alpha _m\)</span>随着<span class="math inline">\(e_m\)</span>的减小而增大，所以分类误差越小的基本分类器 在最终分类器中作用越大。</p>
+\]</span> 可以发现，当<span class="math inline">\(e_m\le \frac{1}{2}\)</span>时，系数<span class="math inline">\(\alpha _m\ge 0\)</span>，且<span class="math inline">\(\alpha _m\)</span>随着<span class="math inline">\(e_m\)</span>的减小而增大，所以分类误差越小的基本分类在最终分类器中作用越大。</p>
 <p>​ （d）更新训练数据集的权值分布 <span class="math display">\[
 \begin{gathered}
 D_{m+1}=\left(w_{m+1,1}, \cdots, w_{m+1, i}, \cdots, w_{m+1, N}\right) \\
@@ -494,7 +494,7 @@ w_{m+1, i}=\frac{w_{m i}}{Z_{m}} \exp \left(-\alpha_{m} y_{i} G_{m}\left(x_{i}\r
 Z_{m}=\sum_{i=1}^{N} w_{m i} \exp \left(-\alpha_{m} y_{i} G_{m}\left(x_{i}\right)\right)
 \]</span> ​ 而且，式（4）可以写成： <span class="math display">\[
 w_{m+1, i}= \begin{cases}\frac{w_{m i}}{Z_{m}} \mathrm{e}^{-\alpha_{m}}, &amp; G_{m}\left(x_{i}\right)=y_{i} \\ \frac{w_{m i}}{Z_{m}} \mathrm{e}^{\alpha_{m}}, &amp; G_{m}\left(x_{i}\right) \neq y_{i}\end{cases}
-\]</span> ​ 因为是二分类任务，所以<span class="math inline">\(G_m(x_i)\)</span>和<span class="math inline">\(y_i\)</span>都只会有两种结果：-1和+1，当<span class="math inline">\(G_{m}(x_{i})=y_{i}\)</span>时，二者同号，所以 是<span class="math inline">\(-\alpha _m\)</span>，二者不相等时异号，所以是<span class="math inline">\(\alpha _m\)</span>。</p>
+\]</span> 因为是二分类任务，所以<span class="math inline">\(G_m(x_i)\)</span>和<span class="math inline">\(y_i\)</span>都只会有两种结果：-1和+1，当<span class="math inline">\(G_{m}(x_{i})=y_{i}\)</span>时，二者同号，所以是<span class="math inline">\(-\alpha _m\)</span>，二者不相等时异号，所以是<span class="math inline">\(\alpha _m\)</span>。</p>
 <p>（3）将基本分类器进行线性组合 <span class="math display">\[
 f(x)=\sum_{m=1}^{M}\alpha _M G_m(x)
 \]</span> ​ 得到最终分类器 <span class="math display">\[
@@ -603,7 +603,7 @@ Z_{m} &amp;=\sum_{i=1}^{N} w_{m i} \exp \left(-\alpha_{m} y_{i} G_{m}\left(x_{i}
 <p>（2）对<span class="math inline">\(m=1,2,\cdots ,M\)</span>​​：（相当于M次循环）</p>
 <p>​ （a）极小化损失函数 <span class="math display">\[
 \left(\beta_{m}, \gamma_{m}\right)=\arg \min _{\beta, \gamma} \sum_{i=1}^{N} L\left(y_{i}, f_{m-1}\left(x_{i}\right)+\beta b\left(x_{i} ; \gamma\right)\right)
-\]</span> ​ 得到参数<span class="math inline">\(\beta_{m}, \gamma_{m}\)</span>。其中<span class="math inline">\(f_{m-1}\left(x_{i}\right)\)</span>表示前<span class="math inline">\(m-1\)</span>轮所得到的基函数的线性组合， <span class="math inline">\(\beta b\left(x_{i} ; \gamma\right)\)</span>表示当前轮的 基函数。</p>
+\]</span> 得到参数<span class="math inline">\(\beta_{m}, \gamma_{m}\)</span>。其中<span class="math inline">\(f_{m-1}\left(x_{i}\right)\)</span>表示前<span class="math inline">\(m-1\)</span>轮所得到的基函数的线性组合， <span class="math inline">\(\beta b\left(x_{i} ; \gamma\right)\)</span>表示当前轮的基函数。</p>
 <p>​ （b）更新 <span class="math display">\[
 f_m(x)=f_{m-1}(x)+\beta_{m}b(x;\gamma _m)
 \]</span> （3）得到加法模型 <span class="math display">\[

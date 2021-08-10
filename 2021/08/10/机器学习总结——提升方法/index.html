@@ -30,7 +30,7 @@
 <meta property="og:description" content="概述 提升方法（boosting）的基本思路是：将弱可学习算法提升为强可学习算法。在分类问题中，它通过每一轮改变训练样本的权重，学习多个分类器，并将所有分类器进行线性组合，得到一个性能更好的分类器。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-10T00:44:11.000Z">
-<meta property="article:modified_time" content="2021-08-10T15:12:05.553Z">
+<meta property="article:modified_time" content="2021-08-10T15:19:21.587Z">
 <meta property="article:author" content="Rex">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="优化方法">
@@ -246,7 +246,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-08-10 08:44:11 / 修改时间：23:12:05" itemprop="dateCreated datePublished" datetime="2021-08-10T08:44:11+08:00">2021-08-10</time>
+      <time title="创建时间：2021-08-10 08:44:11 / 修改时间：23:19:21" itemprop="dateCreated datePublished" datetime="2021-08-10T08:44:11+08:00">2021-08-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -309,10 +309,10 @@ e_{m}&amp;=\sum_{i=1}^{N} P\left(G_{m}\left(x_{i}\right) \neq y_{i}\right)\\
 &amp;=\sum_{i=1}^{N} w_{m i} I\left(G_{m}\left(x_{i}\right) \neq y_{i}\right)\\
 &amp;=\sum_{G_m(x_i)\neq y_i}w_mi
 \end{aligned}
-\]</span> ​ 其中<span class="math inline">\(w_mi\)</span>​表示第<span class="math inline">\(m\)</span>​轮中第<span class="math inline">\(i\)</span>​个实例的权值，<span class="math inline">\(\sum_{i=1}^{N}w_mi=1\)</span>​， <span class="math inline">\(\sum_{i=1}^{N} w_{m i} I\left(G_{m}\left(x_{i}\right)\neq y_{i}\right)\)</span>​是被<span class="math inline">\(G_m(x)\)</span>​误 分类样本的权值之和。</p>
+\]</span> 其中<span class="math inline">\(w_mi\)</span>​表示第<span class="math inline">\(m\)</span>​轮中第<span class="math inline">\(i\)</span>​个实例的权值，<span class="math inline">\(\sum_{i=1}^{N}w_mi=1\)</span>​， <span class="math inline">\(\sum_{i=1}^{N} w_{m i} I\left(G_{m}\left(x_{i}\right)\neq y_{i}\right)\)</span>​是被<span class="math inline">\(G_m(x)\)</span>​误分类样本的权值之和。</p>
 <p>​ （c）计算<span class="math inline">\(G_m(x)\)</span>​的系数（基本分类器的权值，权值越大代表该分类器越有“话语权”） <span class="math display">\[
 \alpha _m = \frac{1}{2}ln\frac{1-e_M}{e_m}
-\]</span> ​ 可以发现，当<span class="math inline">\(e_m\le \frac{1}{2}\)</span>时，系数<span class="math inline">\(\alpha _m\ge 0\)</span>，且<span class="math inline">\(\alpha _m\)</span>随着<span class="math inline">\(e_m\)</span>的减小而增大，所以分类误差越小的基本分类器 在最终分类器中作用越大。</p>
+\]</span> 可以发现，当<span class="math inline">\(e_m\le \frac{1}{2}\)</span>时，系数<span class="math inline">\(\alpha _m\ge 0\)</span>，且<span class="math inline">\(\alpha _m\)</span>随着<span class="math inline">\(e_m\)</span>的减小而增大，所以分类误差越小的基本分类在最终分类器中作用越大。</p>
 <p>​ （d）更新训练数据集的权值分布 <span class="math display">\[
 \begin{gathered}
 D_{m+1}=\left(w_{m+1,1}, \cdots, w_{m+1, i}, \cdots, w_{m+1, N}\right) \\
@@ -322,7 +322,7 @@ w_{m+1, i}=\frac{w_{m i}}{Z_{m}} \exp \left(-\alpha_{m} y_{i} G_{m}\left(x_{i}\r
 Z_{m}=\sum_{i=1}^{N} w_{m i} \exp \left(-\alpha_{m} y_{i} G_{m}\left(x_{i}\right)\right)
 \]</span> ​ 而且，式（4）可以写成： <span class="math display">\[
 w_{m+1, i}= \begin{cases}\frac{w_{m i}}{Z_{m}} \mathrm{e}^{-\alpha_{m}}, &amp; G_{m}\left(x_{i}\right)=y_{i} \\ \frac{w_{m i}}{Z_{m}} \mathrm{e}^{\alpha_{m}}, &amp; G_{m}\left(x_{i}\right) \neq y_{i}\end{cases}
-\]</span> ​ 因为是二分类任务，所以<span class="math inline">\(G_m(x_i)\)</span>和<span class="math inline">\(y_i\)</span>都只会有两种结果：-1和+1，当<span class="math inline">\(G_{m}(x_{i})=y_{i}\)</span>时，二者同号，所以 是<span class="math inline">\(-\alpha _m\)</span>，二者不相等时异号，所以是<span class="math inline">\(\alpha _m\)</span>。</p>
+\]</span> 因为是二分类任务，所以<span class="math inline">\(G_m(x_i)\)</span>和<span class="math inline">\(y_i\)</span>都只会有两种结果：-1和+1，当<span class="math inline">\(G_{m}(x_{i})=y_{i}\)</span>时，二者同号，所以是<span class="math inline">\(-\alpha _m\)</span>，二者不相等时异号，所以是<span class="math inline">\(\alpha _m\)</span>。</p>
 <p>（3）将基本分类器进行线性组合 <span class="math display">\[
 f(x)=\sum_{m=1}^{M}\alpha _M G_m(x)
 \]</span> ​ 得到最终分类器 <span class="math display">\[
@@ -431,7 +431,7 @@ Z_{m} &amp;=\sum_{i=1}^{N} w_{m i} \exp \left(-\alpha_{m} y_{i} G_{m}\left(x_{i}
 <p>（2）对<span class="math inline">\(m=1,2,\cdots ,M\)</span>​​：（相当于M次循环）</p>
 <p>​ （a）极小化损失函数 <span class="math display">\[
 \left(\beta_{m}, \gamma_{m}\right)=\arg \min _{\beta, \gamma} \sum_{i=1}^{N} L\left(y_{i}, f_{m-1}\left(x_{i}\right)+\beta b\left(x_{i} ; \gamma\right)\right)
-\]</span> ​ 得到参数<span class="math inline">\(\beta_{m}, \gamma_{m}\)</span>。其中<span class="math inline">\(f_{m-1}\left(x_{i}\right)\)</span>表示前<span class="math inline">\(m-1\)</span>轮所得到的基函数的线性组合， <span class="math inline">\(\beta b\left(x_{i} ; \gamma\right)\)</span>表示当前轮的 基函数。</p>
+\]</span> 得到参数<span class="math inline">\(\beta_{m}, \gamma_{m}\)</span>。其中<span class="math inline">\(f_{m-1}\left(x_{i}\right)\)</span>表示前<span class="math inline">\(m-1\)</span>轮所得到的基函数的线性组合， <span class="math inline">\(\beta b\left(x_{i} ; \gamma\right)\)</span>表示当前轮的基函数。</p>
 <p>​ （b）更新 <span class="math display">\[
 f_m(x)=f_{m-1}(x)+\beta_{m}b(x;\gamma _m)
 \]</span> （3）得到加法模型 <span class="math display">\[
