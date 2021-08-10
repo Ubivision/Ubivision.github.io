@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hexo无法正确显示LaTeX数学公式的解决方法</title>
-    <url>/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="起因">起因</h2>
-<p>昨天晚上写好了第一篇博文，准备在本地看看效果，想的没啥问题就直接deploy了，好家伙公式一个都显示不对。我在网上搜寻了一下原因，大致意思就是：Hexo自带的Markdown渲染器会使得LaTeX与Markdown冲突，从而使得一些LaTeX书写的内容不能正确转义，造成数学公式无法正确显示。<span id="more"></span></p>
-<h2 id="解决方法">解决方法</h2>
-<p>我搜寻了许多解决方案，不过归根到底，就是要更换Hexo自带的Markdown渲染器。关于Hexo的几种渲染器的介绍，我找到了一篇比较详细的，<a href="https://bugwz.com/2019/09/17/hexo-markdown-renderer/#%E4%B8%80-%E5%BC%95%E8%A8%80">在这里</a>。然后网上的大部分方法是：更换渲染器为kramed，再更改一下此渲染器的转义规则，就OK了。不过我在尝试了上述方法后，发现并不行，行内公式成功显示了，公式块内的公式却直接消失了，我也不知道是什么原因。在试错了多种方法之后，我终于找到了一种适用于我的解决方案，那就是pandoc渲染器：</p>
-<h3 id="卸载hexo自带渲染器">1.卸载Hexo自带渲染器</h3>
-<p>在博客的根目录下，右键--Git Bash--执行如下命令：（下同）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked</span><br></pre></td></tr></table></figure>
-<h3 id="安装pandoc">2.安装pandoc</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-pandoc</span><br></pre></td></tr></table></figure>
-<p>与其他渲染器不同的是，pandoc直接用npm进行安装后无法使用，需要再通过手动下载安装包安装一个pandoc的发行版后，才可以正常使用，<a href="https://github.com/jgm/pandoc/releases">链接在此</a>。如果是Windows系统的话，选择这个：</p>
-<img src="/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/pandoc.jpg" class>
-<p>安装完成后，不出意外就可以使用了。</p>
-<h2 id="存在的bug-解决方法">存在的bug &amp; 解决方法</h2>
-<p>使用Pandoc作为渲染器虽然解决了公式块的显示问题，但是行内公式的显示依然存在问题，我在误打误撞中发现，行内公式的一般格式为：​</p>
-<img src="/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/fomula-vanila.jpg" class>
-<p>可能因为我是从数学公式公式转换LaTeX的网站上直接复制的代码，在公式的前后，都有一个空格字符，问题就出在这里，如果去掉这两个空格，行内公式的渲染就不会有任何问题（至少我目前没有发现），也就是这样：</p>
-<img src="/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/fomula-fix.jpg" class>
-<p>这样写之后，再通过pandoc渲染，就没有问题了。</p>
+    <title>机器学习实践——Kmeans</title>
+    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94Kmeans/</url>
+    <content><![CDATA[<h2 id="概述">概述</h2>
+<p>Kmeans是一种无监督聚类算法，试图从没有label的数据中找寻数据的潜在关系，其算法步骤如下：<span id="more"></span></p>
+<p>1.随机从数据集中选取k个样本作为中心点，代表k个簇（cluster）；</p>
+<p>2.遍历数据集中的每个点，计算其与每个中心点之间的距离，并将其归为与其距离最近的那个簇；</p>
+<p>3.根据当前分类情况更新中心点的位置；</p>
+<p>4.重复2、3步，直到达到某一条件（迭代次数、中心点位置不再改变等）。</p>
+<h2 id="实践">实践</h2>
+<h3 id="创建kmeans类">创建Kmeans类</h3>
+<p>主要有3个函数，构造函数负责传递超参数（分为k类、迭代次数），fit函数负责根据给定数据进行分类，predict函数负责在根据给定数据已经完成分类的基础上，对新给定的数据进行类别判别。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kmeans</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, k, max_iter</span>)：</span></span><br><span class="line"><span class="function">    <span class="title">def</span> <span class="title">fit</span>(<span class="params">self, data</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, p_data</span>):</span>             </span><br></pre></td></tr></table></figure>
+<h4 id="构造函数">构造函数</h4>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, k=<span class="number">2</span>, max_iter=<span class="number">300</span></span>):</span></span><br><span class="line">    self.k = k</span><br><span class="line">    self.max_iter = max_iter</span><br></pre></td></tr></table></figure>
+<h4 id="fit函数">fit函数</h4>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fit</span>(<span class="params">self, data</span>):</span></span><br><span class="line">    self.centers = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.k):</span><br><span class="line">        self.centers[i] = data[i]   </span><br><span class="line">        <span class="comment"># 设置k个中心点，挑选输入数据点的前k个作为暂时的中心点</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.max_iter):</span><br><span class="line">        self.clf = &#123;&#125;   <span class="comment"># 存放属于不同类别的数据点</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.k):   <span class="comment"># 创建k个位置，用index代指某个簇</span></span><br><span class="line">            self.clf[i] = []</span><br><span class="line">        <span class="keyword">for</span> feature <span class="keyword">in</span> data:</span><br><span class="line">            distances = []	<span class="comment"># 存放每个数据点到所以中心点的距离</span></span><br><span class="line">            <span class="keyword">for</span> center <span class="keyword">in</span> self.centers:</span><br><span class="line">                distances.append(np.linalg.norm(feature-self.centers[center]))</span><br><span class="line">            classification = distances.index(<span class="built_in">min</span>(distances))    </span><br><span class="line">            <span class="comment"># 记录距离其最小的簇</span></span><br><span class="line">            self.clf[classification].append(feature)    </span><br><span class="line">            <span class="comment"># 将当前数据点分类至与其距离最小的簇</span></span><br><span class="line">        prev_centers = <span class="built_in">dict</span>(self.centers)   </span><br><span class="line">        <span class="comment"># 一次分类完成，重新计算当前分类情况下每个簇的中心点</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> self.clf:</span><br><span class="line">            self.centers[c] = np.average(self.clf[c], axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="predict函数">predict函数</h4>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, p_data</span>):</span></span><br><span class="line">    <span class="keyword">for</span> center <span class="keyword">in</span> self.centers:	<span class="comment"># 计算输入数据点与每个簇的距离</span></span><br><span class="line">    	distances = [np.linalg.norm(p_data - self.centers[center])]</span><br><span class="line">    index = distances.index(<span class="built_in">min</span>(distances))</span><br><span class="line">    <span class="keyword">return</span> index</span><br></pre></td></tr></table></figure>
+<h3 id="给出数据点">给出数据点</h3>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = np.array([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">1.5</span>, <span class="number">1.8</span>], [<span class="number">5</span>, <span class="number">8</span>], [<span class="number">8</span>, <span class="number">8</span>], [<span class="number">1</span>, <span class="number">0.6</span>], [<span class="number">9</span>, <span class="number">11</span>]])</span><br></pre></td></tr></table></figure>
+<h3 id="进行kmeans聚类绘图">进行Kmeans聚类、绘图</h3>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">k_means = Kmeans(k=<span class="number">2</span>)</span><br><span class="line">k_means.fit(x)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(k_means.centers)):  <span class="comment"># 用五角星绘制中心点</span></span><br><span class="line">    pyplot.scatter(k_means.centers[i][<span class="number">0</span>], k_means.centers[i][<span class="number">1</span>], marker=<span class="string">&#x27;*&#x27;</span>, s=<span class="number">150</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(k_means.clf)):</span><br><span class="line">    <span class="keyword">for</span> point <span class="keyword">in</span> k_means.clf[i]:  <span class="comment"># 用圆点绘制数据点</span></span><br><span class="line">        pyplot.scatter(point[<span class="number">0</span>], point[<span class="number">1</span>], c=(<span class="string">&#x27;r&#x27;</span> <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;b&#x27;</span>))</span><br><span class="line"></span><br><span class="line">predict = [[<span class="number">2</span>, <span class="number">1</span>], [<span class="number">6</span>, <span class="number">9</span>]]  <span class="comment"># 给出新的数据点，进行预测并用x绘制</span></span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> predict:</span><br><span class="line">    cat = k_means.predict(predict)</span><br><span class="line">    pyplot.scatter(feature[<span class="number">0</span>], feature[<span class="number">1</span>], c=(<span class="string">&#x27;r&#x27;</span> <span class="keyword">if</span> cat == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;b&#x27;</span>), marker=<span class="string">&#x27;x&#x27;</span>)</span><br><span class="line"></span><br><span class="line">pyplot.show()</span><br></pre></td></tr></table></figure>
+<p>完整代码请<a href="https://github.com/Ubivision/ML-ALgorithms">点击这里</a></p>
 ]]></content>
       <categories>
-        <category>博客搭建</category>
+        <category>机器学习</category>
       </categories>
       <tags>
-        <tag>Hexo</tag>
+        <tag>机器学习</tag>
+        <tag>分类问题</tag>
+        <tag>无监督学习</tag>
       </tags>
   </entry>
   <entry>
@@ -85,7 +90,102 @@ h_{\theta}(x)=\theta_{0}+\theta_{1} x_{1}+\theta_{2} x_{2}+\ldots+\theta_{n} x_{
       </categories>
       <tags>
         <tag>机器学习</tag>
+        <tag>分类问题</tag>
         <tag>回归问题</tag>
+        <tag>监督学习</tag>
+        <tag>判别模型</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo无法正确显示LaTeX数学公式的解决方法</title>
+    <url>/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="起因">起因</h2>
+<p>昨天晚上写好了第一篇博文，准备在本地看看效果，想的没啥问题就直接deploy了，好家伙公式一个都显示不对。我在网上搜寻了一下原因，大致意思就是：Hexo自带的Markdown渲染器会使得LaTeX与Markdown冲突，从而使得一些LaTeX书写的内容不能正确转义，造成数学公式无法正确显示。<span id="more"></span></p>
+<h2 id="解决方法">解决方法</h2>
+<p>我搜寻了许多解决方案，不过归根到底，就是要更换Hexo自带的Markdown渲染器。关于Hexo的几种渲染器的介绍，我找到了一篇比较详细的，<a href="https://bugwz.com/2019/09/17/hexo-markdown-renderer/#%E4%B8%80-%E5%BC%95%E8%A8%80">在这里</a>。然后网上的大部分方法是：更换渲染器为kramed，再更改一下此渲染器的转义规则，就OK了。不过我在尝试了上述方法后，发现并不行，行内公式成功显示了，公式块内的公式却直接消失了，我也不知道是什么原因。在试错了多种方法之后，我终于找到了一种适用于我的解决方案，那就是pandoc渲染器：</p>
+<h3 id="卸载hexo自带渲染器">1.卸载Hexo自带渲染器</h3>
+<p>在博客的根目录下，右键--Git Bash--执行如下命令：（下同）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked</span><br></pre></td></tr></table></figure>
+<h3 id="安装pandoc">2.安装pandoc</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-pandoc</span><br></pre></td></tr></table></figure>
+<p>与其他渲染器不同的是，pandoc直接用npm进行安装后无法使用，需要再通过手动下载安装包安装一个pandoc的发行版后，才可以正常使用，<a href="https://github.com/jgm/pandoc/releases">链接在此</a>。如果是Windows系统的话，选择这个：</p>
+<img src="/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/pandoc.jpg" class>
+<p>安装完成后，不出意外就可以使用了。</p>
+<h2 id="存在的bug-解决方法">存在的bug &amp; 解决方法</h2>
+<p>使用Pandoc作为渲染器虽然解决了公式块的显示问题，但是行内公式的显示依然存在问题，我在误打误撞中发现，行内公式的一般格式为：​</p>
+<img src="/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/fomula-vanila.jpg" class>
+<p>可能因为我是从数学公式公式转换LaTeX的网站上直接复制的代码，在公式的前后，都有一个空格字符，问题就出在这里，如果去掉这两个空格，行内公式的渲染就不会有任何问题（至少我目前没有发现），也就是这样：</p>
+<img src="/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/fomula-fix.jpg" class>
+<p>这样写之后，再通过pandoc渲染，就没有问题了。</p>
+]]></content>
+      <categories>
+        <category>博客搭建</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习总结——感知机</title>
+    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
+    <content><![CDATA[<h2 id="关键字">关键字</h2>
+<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降<span id="more"></span></p>
+<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
+<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
+<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
+<h2 id="感知机学习策略">感知机学习策略</h2>
+<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
+-y_i(wx_i+b)&gt;0
+\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
+L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
+\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
+\begin{gathered}
+\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
+\frac{dL}{db}=-\sum_{x_i\in M}y_i
+\end{gathered}
+\]</span></p>
+<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
+<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
+<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
+\begin{gathered}
+w=w+\eta y_ix_i\\
+b=b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
+<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
+\begin{gathered}
+w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
+b=\sum_{i=1}^{N}\alpha _iy_i
+\end{gathered}
+\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
+<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+b = b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+代入\alpha _i=n_i\eta：\\
+\alpha = n_i\eta + \eta=\eta (n_i+1)
+\end{gathered}
+\]</span> 就相当于某点被误分类的次数+1。</p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
         <tag>分类问题</tag>
         <tag>监督学习</tag>
         <tag>判别模型</tag>
@@ -172,40 +272,6 @@ W=W-alpha*\frac{d C o s t}{d W}
       </tags>
   </entry>
   <entry>
-    <title>机器学习实践——Kmeans</title>
-    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94Kmeans/</url>
-    <content><![CDATA[<h2 id="概述">概述</h2>
-<p>Kmeans是一种无监督聚类算法，试图从没有label的数据中找寻数据的潜在关系，其算法步骤如下：<span id="more"></span></p>
-<p>1.随机从数据集中选取k个样本作为中心点，代表k个簇（cluster）；</p>
-<p>2.遍历数据集中的每个点，计算其与每个中心点之间的距离，并将其归为与其距离最近的那个簇；</p>
-<p>3.根据当前分类情况更新中心点的位置；</p>
-<p>4.重复2、3步，直到达到某一条件（迭代次数、中心点位置不再改变等）。</p>
-<h2 id="实践">实践</h2>
-<h3 id="创建kmeans类">创建Kmeans类</h3>
-<p>主要有3个函数，构造函数负责传递超参数（分为k类、迭代次数），fit函数负责根据给定数据进行分类，predict函数负责在根据给定数据已经完成分类的基础上，对新给定的数据进行类别判别。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kmeans</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, k, max_iter</span>)：</span></span><br><span class="line"><span class="function">    <span class="title">def</span> <span class="title">fit</span>(<span class="params">self, data</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, p_data</span>):</span>             </span><br></pre></td></tr></table></figure>
-<h4 id="构造函数">构造函数</h4>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, k=<span class="number">2</span>, max_iter=<span class="number">300</span></span>):</span></span><br><span class="line">    self.k = k</span><br><span class="line">    self.max_iter = max_iter</span><br></pre></td></tr></table></figure>
-<h4 id="fit函数">fit函数</h4>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fit</span>(<span class="params">self, data</span>):</span></span><br><span class="line">    self.centers = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.k):</span><br><span class="line">        self.centers[i] = data[i]   </span><br><span class="line">        <span class="comment"># 设置k个中心点，挑选输入数据点的前k个作为暂时的中心点</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.max_iter):</span><br><span class="line">        self.clf = &#123;&#125;   <span class="comment"># 存放属于不同类别的数据点</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.k):   <span class="comment"># 创建k个位置，用index代指某个簇</span></span><br><span class="line">            self.clf[i] = []</span><br><span class="line">        <span class="keyword">for</span> feature <span class="keyword">in</span> data:</span><br><span class="line">            distances = []	<span class="comment"># 存放每个数据点到所以中心点的距离</span></span><br><span class="line">            <span class="keyword">for</span> center <span class="keyword">in</span> self.centers:</span><br><span class="line">                distances.append(np.linalg.norm(feature-self.centers[center]))</span><br><span class="line">            classification = distances.index(<span class="built_in">min</span>(distances))    </span><br><span class="line">            <span class="comment"># 记录距离其最小的簇</span></span><br><span class="line">            self.clf[classification].append(feature)    </span><br><span class="line">            <span class="comment"># 将当前数据点分类至与其距离最小的簇</span></span><br><span class="line">        prev_centers = <span class="built_in">dict</span>(self.centers)   </span><br><span class="line">        <span class="comment"># 一次分类完成，重新计算当前分类情况下每个簇的中心点</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> self.clf:</span><br><span class="line">            self.centers[c] = np.average(self.clf[c], axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<h4 id="predict函数">predict函数</h4>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, p_data</span>):</span></span><br><span class="line">    <span class="keyword">for</span> center <span class="keyword">in</span> self.centers:	<span class="comment"># 计算输入数据点与每个簇的距离</span></span><br><span class="line">    	distances = [np.linalg.norm(p_data - self.centers[center])]</span><br><span class="line">    index = distances.index(<span class="built_in">min</span>(distances))</span><br><span class="line">    <span class="keyword">return</span> index</span><br></pre></td></tr></table></figure>
-<h3 id="给出数据点">给出数据点</h3>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = np.array([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">1.5</span>, <span class="number">1.8</span>], [<span class="number">5</span>, <span class="number">8</span>], [<span class="number">8</span>, <span class="number">8</span>], [<span class="number">1</span>, <span class="number">0.6</span>], [<span class="number">9</span>, <span class="number">11</span>]])</span><br></pre></td></tr></table></figure>
-<h3 id="进行kmeans聚类绘图">进行Kmeans聚类、绘图</h3>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">k_means = Kmeans(k=<span class="number">2</span>)</span><br><span class="line">k_means.fit(x)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(k_means.centers)):  <span class="comment"># 用五角星绘制中心点</span></span><br><span class="line">    pyplot.scatter(k_means.centers[i][<span class="number">0</span>], k_means.centers[i][<span class="number">1</span>], marker=<span class="string">&#x27;*&#x27;</span>, s=<span class="number">150</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(k_means.clf)):</span><br><span class="line">    <span class="keyword">for</span> point <span class="keyword">in</span> k_means.clf[i]:  <span class="comment"># 用圆点绘制数据点</span></span><br><span class="line">        pyplot.scatter(point[<span class="number">0</span>], point[<span class="number">1</span>], c=(<span class="string">&#x27;r&#x27;</span> <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;b&#x27;</span>))</span><br><span class="line"></span><br><span class="line">predict = [[<span class="number">2</span>, <span class="number">1</span>], [<span class="number">6</span>, <span class="number">9</span>]]  <span class="comment"># 给出新的数据点，进行预测并用x绘制</span></span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> predict:</span><br><span class="line">    cat = k_means.predict(predict)</span><br><span class="line">    pyplot.scatter(feature[<span class="number">0</span>], feature[<span class="number">1</span>], c=(<span class="string">&#x27;r&#x27;</span> <span class="keyword">if</span> cat == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;b&#x27;</span>), marker=<span class="string">&#x27;x&#x27;</span>)</span><br><span class="line"></span><br><span class="line">pyplot.show()</span><br></pre></td></tr></table></figure>
-<p>完整代码请<a href="https://github.com/Ubivision/ML-ALgorithms">点击这里</a></p>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>分类问题</tag>
-        <tag>无监督学习</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>机器学习总结——决策树</title>
     <url>/2021/08/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E5%86%B3%E7%AD%96%E6%A0%91/</url>
     <content><![CDATA[<h2 id="概述">概述</h2>
@@ -255,7 +321,12 @@ g_R(D,A)=\frac{g(D,A)}{H_A{D}}
 <p><strong>原因：</strong>防止过拟合。</p>
 <p><strong>核心思想：</strong>递归地从树的叶结点向上回缩，比较叶结点回缩到其父节点之前与之后树的整体损失函数大小，如果剪枝后的损失函数小于剪枝前的损失函数，则进行剪枝。（损失函数见统计学习方法P79）</p>
 <h2 id="cart算法">CART算法</h2>
-<p>分类与回归树 (classification and regression tree)，简称CART，也是一种决策树，既可以用于分类，也可以用于回归，是在给定输入随机变量<span class="math inline">\(X\)</span>条件下输出随机变量<span class="math inline">\(Y\)</span>​​​的条件概率分布的学习方法。CART决策树是二叉树内部结点特征的取值为"是"和"否"，左分支是取值为“是”的分支，右分支是取值为“否”的分支。这样的决策树等价于递归地二分每个特征，将特征空间划分为有限个单元，并在这些单元上确定预测的概率分布，也就是在输入给定的条件下输出的条件概率分布。</p>
+<p>分类与回归树 (classification and regression tree)，简称CART，也是一种决策树，既可以用于分类，也可以用于回归，是在给定输入随机变量<span class="math inline">\(X\)</span>条件下输出随机变量<span class="math inline">\(Y\)</span>​​​​的条件概率分布的学习方法。CART决策树是二叉树内部结点特征的取值为"是"和"否"，左分支是取值为“是”的分支，右分支是取值为“否”的分支。这样的决策树等价于递归地二分每个特征，将特征空间划分为有限个单元，并在这些单元上确定预测的概率分布，也就是在输入给定的条件下输出的条件概率分布。</p>
+<p>一棵回归树对应着输入空间(即特征空间)的一个划分以及在划分的单元上的输出值。 假设己将输入空间划分为<span class="math inline">\(M\)</span>个单元<span class="math inline">\(R_1,R_2,\cdots ,R_M\)</span>并且在每个单元<span class="math inline">\(R_M\)</span>上有一个固定的输出值<span class="math inline">\(c_m\)</span>，于是回归树模型可表示为 <span class="math display">\[
+f(x)=\sum_{m=1}^{M} c_{m} I\left(x \in R_{m}\right)
+\]</span> 当输入空间的划分确定时，可以用平方误差<span class="math inline">\(\sum_{x_i\in R_m}(y_i-f(x_i)^2)\)</span>来表示回归树对于训练数据的预测误差，用平方误差最小的准则求解每个单元上的最优输出值。易知，单元<span class="math inline">\(R_m\)</span>上的<span class="math inline">\(c_m\)</span>的最优值<span class="math inline">\(\hat{c_m}\)</span>与是<span class="math inline">\(R_m\)</span>上的所有输入实例<span class="math inline">\(x_i\)</span>对应的输出<span class="math inline">\(y_i\)</span>​的均值，即 <span class="math display">\[
+\hat{c_m}=ave(y_i \mid x_i\in R_m)
+\]</span></p>
 <h3 id="最小二乘回归树生成算法">最小二乘回归树生成算法</h3>
 <p>我个人理解这一过程，用伪代码说明：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">最小MSE = <span class="number">0</span></span><br><span class="line">最小MSE对应特征 = null</span><br><span class="line">最小MSE对应特征的最优划分点 = null</span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> 特征集:</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> 当前特征可能的划分点:</span><br><span class="line">        计算当前MSE</span><br><span class="line">        <span class="keyword">if</span>(当前MSE&lt;最小MSE)：</span><br><span class="line">            最小MSE = 当前MSE</span><br><span class="line">            最小MSE对应特征 = j</span><br><span class="line">            最小MSE对应特征的最优划分点 = s</span><br></pre></td></tr></table></figure>
@@ -277,7 +348,7 @@ Gini(p)=2p(1-p)
  \operatorname{Gini}(D, A)=\frac{\left|D_{1}\right|}{|D|} \operatorname{Gini}\left(D_{1}\right)+\frac{\left|D_{2}\right|}{|D|} \operatorname{Gini}\left(D_{2}\right) 
 \end{equation}
 \]</span> 基尼指数<span class="math inline">\(Gini(D)\)</span>表示集合<span class="math inline">\(D\)</span>的不确定性，基尼指数<span class="math inline">\(Gini(D， A)\)</span>表示经<span class="math inline">\(A = α\)</span>分割后集合<span class="math inline">\(D\)</span>的不确定性。基尼指数值越大，样本集合的不确定性也就越大，这一点与熵相似。</p>
-<h3 id="cart算法-1">CART算法</h3>
+<h3 id="分类树生成算法">分类树生成算法</h3>
 <p><strong>算法步骤：</strong></p>
 <p>1.设结点的训练数据集为<span class="math inline">\(D\)</span>， 计算现有特征对该数据集的基尼指数。此时，对每一个特征<span class="math inline">\(A\)</span>， 对其可能取的每个值<span class="math inline">\(\alpha\)</span>，根据样本点对<span class="math inline">\(A=\alpha\)</span>的测试为“是”或“否” 将<span class="math inline">\(D\)</span>分割成<span class="math inline">\(D_1\)</span>和<span class="math inline">\(D_2\)</span>两部分， 计算<span class="math inline">\(A= α\)</span>时的基尼指数。</p>
 <p>2.在所有可能的特征<span class="math inline">\(A\)</span>以及它们所有可能的切分点<span class="math inline">\(α\)</span>中，选择基尼指数最小的特征及其对应的切分点作为最优特征与最优切分点。依最优特征与最优切分点，从现结点生成两个子结点，将训练数据集依特征分配到两个子结点中去。</p>
@@ -291,74 +362,8 @@ Gini(p)=2p(1-p)
       </categories>
       <tags>
         <tag>机器学习</tag>
+        <tag>分类问题</tag>
         <tag>回归问题</tag>
-        <tag>分类问题</tag>
-        <tag>监督学习</tag>
-        <tag>判别模型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习总结——感知机</title>
-    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
-    <content><![CDATA[<h2 id="关键字">关键字</h2>
-<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降<span id="more"></span></p>
-<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
-<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
-<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
-<h2 id="感知机学习策略">感知机学习策略</h2>
-<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
--y_i(wx_i+b)&gt;0
-\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
-L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
-\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
-\begin{gathered}
-\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
-\frac{dL}{db}=-\sum_{x_i\in M}y_i
-\end{gathered}
-\]</span></p>
-<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
-<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
-<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
-<p>步骤：</p>
-<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
-<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
-<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
-\begin{gathered}
-w=w+\eta y_ix_i\\
-b=b+\eta y_i
-\end{gathered}
-\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
-<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
-<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
-\begin{gathered}
-w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
-b=\sum_{i=1}^{N}\alpha _iy_i
-\end{gathered}
-\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
-<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
-<p>步骤：</p>
-<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
-<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
-<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
-\begin{gathered}
-\alpha _i = \alpha _i+\eta\\
-b = b+\eta y_i
-\end{gathered}
-\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
-<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
-\begin{gathered}
-\alpha _i = \alpha _i+\eta\\
-代入\alpha _i=n_i\eta：\\
-\alpha = n_i\eta + \eta=\eta (n_i+1)
-\end{gathered}
-\]</span> 就相当于某点被误分类的次数+1。</p>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>分类问题</tag>
         <tag>监督学习</tag>
         <tag>判别模型</tag>
       </tags>
