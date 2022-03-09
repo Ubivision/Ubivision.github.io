@@ -19,12 +19,12 @@
 <h2 id="跨服务器下载文件">跨服务器下载文件</h2>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scp -P 端口号 -r 用户名@要下载文件所在服务器IP:要下载文件所在服务器路径 本机目标存储路径</span><br><span class="line">例：scp -P 1089 -r user@192.168.0.1:/home/test /home/new</span><br></pre></td></tr></table></figure>
 <h2 id="更改终端当前路径">更改终端当前路径</h2>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd ..                  返回上一级目录</span><br><span class="line">cd ../..               返回上两级目录</span><br><span class="line">cd或cd ~           	  返回home目录</span><br><span class="line">cd 目录名       		返回指定目录</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">返回上一级目录：cd ..</span><br><span class="line">返回上两级目录：cd ../..</span><br><span class="line">返回home目录：cd或cd ~</span><br><span class="line">返回指定目录：cd 目录名</span><br></pre></td></tr></table></figure>
 <h2 id="查看磁盘剩余空间">查看磁盘剩余空间</h2>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">df -hl</span><br></pre></td></tr></table></figure>
 <h2 id="screen命令">Screen命令</h2>
 <p>在Screen中运行代码，就算本机关闭了远程连接，代码也会在服务器中自行跑完，非常适合长时间炼丹</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">screen -S 起个名                          创建screen</span><br><span class="line">screen -ls                               列出所有已创建的screen</span><br><span class="line">screen -r 创建好的screen名称或者pid		  重新连接到指定screen</span><br><span class="line">exit								  关闭当前screen</span><br><span class="line">CTRL + A + D                             挂起当前screen</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">创建screen：screen -S 起个名</span><br><span class="line">列出所有已创建的screen：screen -ls    </span><br><span class="line">重新连接到指定screen：screen -r 创建好的screen名称或者pid</span><br><span class="line">关闭当前screen：exit</span><br><span class="line">挂起当前screen：CTRL + A + D</span><br></pre></td></tr></table></figure>
 <h3 id="解决screen中连不上attached窗口的问题">解决screen中连不上Attached窗口的问题：</h3>
 <p>依次执行</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">screen -d 创建好的screen名称或者pid	</span><br><span class="line">screen -r 创建好的screen名称或者pid	</span><br></pre></td></tr></table></figure>
