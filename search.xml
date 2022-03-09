@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>服务器Linux常用命令（持续更新）</title>
+    <url>/2022/03/09/%E6%9C%8D%E5%8A%A1%E5%99%A8Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h2 id="对文件操作">对文件操作</h2>
+<h3 id="复制">复制</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cp -r file_path target_path</span><br></pre></td></tr></table></figure>
+<h3 id="移动">移动</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mv file_path target_path</span><br></pre></td></tr></table></figure>
+<h3 id="删除慎用没有后悔药">删除（慎用，没有后悔药）</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rm -rf file_path</span><br></pre></td></tr></table></figure>
+<h2 id="压缩解压">压缩/解压</h2>
+<h3 id="zip">zip：</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">解压：unzip file_path -d target_path</span><br><span class="line">压缩：zip -q -r file_path target_path</span><br></pre></td></tr></table></figure>
+<h3 id="tar">tar：</h3>
+<p>需要先把tar文件移动至目标目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">解压：tar -xvf file_path</span><br></pre></td></tr></table></figure>
+<h2 id="跨服务器下载文件">跨服务器下载文件</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scp -P 端口号 -r 用户名@要下载文件所在服务器IP:要下载文件所在服务器路径 本机目标存储路径</span><br><span class="line">例：scp -P 1089 -r user@192.168.0.1:/home/test /home/new</span><br></pre></td></tr></table></figure>
+<h2 id="更改终端当前路径">更改终端当前路径</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd ..                  返回上一级目录</span><br><span class="line">cd ../..               返回上两级目录</span><br><span class="line">cd或cd ~           	  返回home目录</span><br><span class="line">cd 目录名       		返回指定目录</span><br></pre></td></tr></table></figure>
+<h2 id="查看磁盘剩余空间">查看磁盘剩余空间</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">df -hl</span><br></pre></td></tr></table></figure>
+<h2 id="screen命令">Screen命令</h2>
+<p>在Screen中运行代码，就算本机关闭了远程连接，代码也会在服务器中自行跑完，非常适合长时间炼丹</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">screen -S 起个名                          创建screen</span><br><span class="line">screen -ls                               列出所有已创建的screen</span><br><span class="line">screen -r 创建好的screen名称或者pid		  重新连接到指定screen</span><br><span class="line">exit								  关闭当前screen</span><br><span class="line">CTRL + A + D                             挂起当前screen</span><br></pre></td></tr></table></figure>
+<h3 id="解决screen中连不上attached窗口的问题">解决screen中连不上Attached窗口的问题：</h3>
+<p>依次执行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">screen -d 创建好的screen名称或者pid	</span><br><span class="line">screen -r 创建好的screen名称或者pid	</span><br></pre></td></tr></table></figure>
+<h2 id="tensorboard指令">tensorboard指令</h2>
+<p>炼丹必备</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tensorboard --logdir tensorboard文件所在目录</span><br><span class="line">注：路径不精确到该文件自身</span><br></pre></td></tr></table></figure>
+<h2 id="查看服务器gpu相关">查看服务器GPU相关</h2>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>经验积累</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Tips</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo无法正确显示LaTeX数学公式的解决方法</title>
     <url>/2021/07/26/Hexo%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BALaTeX%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<h2 id="起因">起因</h2>
@@ -27,40 +69,6 @@
       </categories>
       <tags>
         <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习实践——Kmeans</title>
-    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94Kmeans/</url>
-    <content><![CDATA[<h2 id="概述">概述</h2>
-<p>Kmeans是一种无监督聚类算法，试图从没有label的数据中找寻数据的潜在关系，其算法步骤如下：<span id="more"></span></p>
-<p>1.随机从数据集中选取k个样本作为中心点，代表k个簇（cluster）；</p>
-<p>2.遍历数据集中的每个点，计算其与每个中心点之间的距离，并将其归为与其距离最近的那个簇；</p>
-<p>3.根据当前分类情况更新中心点的位置；</p>
-<p>4.重复2、3步，直到达到某一条件（迭代次数、中心点位置不再改变等）。</p>
-<h2 id="实践">实践</h2>
-<h3 id="创建kmeans类">创建Kmeans类</h3>
-<p>主要有3个函数，构造函数负责传递超参数（分为k类、迭代次数），fit函数负责根据给定数据进行分类，predict函数负责在根据给定数据已经完成分类的基础上，对新给定的数据进行类别判别。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kmeans</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, k, max_iter</span>)：</span></span><br><span class="line"><span class="function">    <span class="title">def</span> <span class="title">fit</span>(<span class="params">self, data</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, p_data</span>):</span>             </span><br></pre></td></tr></table></figure>
-<h4 id="构造函数">构造函数</h4>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, k=<span class="number">2</span>, max_iter=<span class="number">300</span></span>):</span></span><br><span class="line">    self.k = k</span><br><span class="line">    self.max_iter = max_iter</span><br></pre></td></tr></table></figure>
-<h4 id="fit函数">fit函数</h4>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fit</span>(<span class="params">self, data</span>):</span></span><br><span class="line">    self.centers = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.k):</span><br><span class="line">        self.centers[i] = data[i]   </span><br><span class="line">        <span class="comment"># 设置k个中心点，挑选输入数据点的前k个作为暂时的中心点</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.max_iter):</span><br><span class="line">        self.clf = &#123;&#125;   <span class="comment"># 存放属于不同类别的数据点</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.k):   <span class="comment"># 创建k个位置，用index代指某个簇</span></span><br><span class="line">            self.clf[i] = []</span><br><span class="line">        <span class="keyword">for</span> feature <span class="keyword">in</span> data:</span><br><span class="line">            distances = []	<span class="comment"># 存放每个数据点到所以中心点的距离</span></span><br><span class="line">            <span class="keyword">for</span> center <span class="keyword">in</span> self.centers:</span><br><span class="line">                distances.append(np.linalg.norm(feature-self.centers[center]))</span><br><span class="line">            classification = distances.index(<span class="built_in">min</span>(distances))    </span><br><span class="line">            <span class="comment"># 记录距离其最小的簇</span></span><br><span class="line">            self.clf[classification].append(feature)    </span><br><span class="line">            <span class="comment"># 将当前数据点分类至与其距离最小的簇</span></span><br><span class="line">        prev_centers = <span class="built_in">dict</span>(self.centers)   </span><br><span class="line">        <span class="comment"># 一次分类完成，重新计算当前分类情况下每个簇的中心点</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> self.clf:</span><br><span class="line">            self.centers[c] = np.average(self.clf[c], axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<h4 id="predict函数">predict函数</h4>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, p_data</span>):</span></span><br><span class="line">    <span class="keyword">for</span> center <span class="keyword">in</span> self.centers:	<span class="comment"># 计算输入数据点与每个簇的距离</span></span><br><span class="line">    	distances = [np.linalg.norm(p_data - self.centers[center])]</span><br><span class="line">    index = distances.index(<span class="built_in">min</span>(distances))</span><br><span class="line">    <span class="keyword">return</span> index</span><br></pre></td></tr></table></figure>
-<h3 id="给出数据点">给出数据点</h3>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = np.array([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">1.5</span>, <span class="number">1.8</span>], [<span class="number">5</span>, <span class="number">8</span>], [<span class="number">8</span>, <span class="number">8</span>], [<span class="number">1</span>, <span class="number">0.6</span>], [<span class="number">9</span>, <span class="number">11</span>]])</span><br></pre></td></tr></table></figure>
-<h3 id="进行kmeans聚类绘图">进行Kmeans聚类、绘图</h3>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">k_means = Kmeans(k=<span class="number">2</span>)</span><br><span class="line">k_means.fit(x)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(k_means.centers)):  <span class="comment"># 用五角星绘制中心点</span></span><br><span class="line">    pyplot.scatter(k_means.centers[i][<span class="number">0</span>], k_means.centers[i][<span class="number">1</span>], marker=<span class="string">&#x27;*&#x27;</span>, s=<span class="number">150</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(k_means.clf)):</span><br><span class="line">    <span class="keyword">for</span> point <span class="keyword">in</span> k_means.clf[i]:  <span class="comment"># 用圆点绘制数据点</span></span><br><span class="line">        pyplot.scatter(point[<span class="number">0</span>], point[<span class="number">1</span>], c=(<span class="string">&#x27;r&#x27;</span> <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;b&#x27;</span>))</span><br><span class="line"></span><br><span class="line">predict = [[<span class="number">2</span>, <span class="number">1</span>], [<span class="number">6</span>, <span class="number">9</span>]]  <span class="comment"># 给出新的数据点，进行预测并用x绘制</span></span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> predict:</span><br><span class="line">    cat = k_means.predict(predict)</span><br><span class="line">    pyplot.scatter(feature[<span class="number">0</span>], feature[<span class="number">1</span>], c=(<span class="string">&#x27;r&#x27;</span> <span class="keyword">if</span> cat == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;b&#x27;</span>), marker=<span class="string">&#x27;x&#x27;</span>)</span><br><span class="line"></span><br><span class="line">pyplot.show()</span><br></pre></td></tr></table></figure>
-<p>完整代码请<a href="https://github.com/Ubivision/ML-ALgorithms">点击这里</a></p>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>分类问题</tag>
-        <tag>无监督学习</tag>
       </tags>
   </entry>
   <entry>
@@ -119,10 +127,44 @@ h_{\theta}(x)=\theta_{0}+\theta_{1} x_{1}+\theta_{2} x_{2}+\ldots+\theta_{n} x_{
       </categories>
       <tags>
         <tag>机器学习</tag>
-        <tag>分类问题</tag>
         <tag>回归问题</tag>
+        <tag>分类问题</tag>
         <tag>监督学习</tag>
         <tag>判别模型</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习实践——Kmeans</title>
+    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94Kmeans/</url>
+    <content><![CDATA[<h2 id="概述">概述</h2>
+<p>Kmeans是一种无监督聚类算法，试图从没有label的数据中找寻数据的潜在关系，其算法步骤如下：<span id="more"></span></p>
+<p>1.随机从数据集中选取k个样本作为中心点，代表k个簇（cluster）；</p>
+<p>2.遍历数据集中的每个点，计算其与每个中心点之间的距离，并将其归为与其距离最近的那个簇；</p>
+<p>3.根据当前分类情况更新中心点的位置；</p>
+<p>4.重复2、3步，直到达到某一条件（迭代次数、中心点位置不再改变等）。</p>
+<h2 id="实践">实践</h2>
+<h3 id="创建kmeans类">创建Kmeans类</h3>
+<p>主要有3个函数，构造函数负责传递超参数（分为k类、迭代次数），fit函数负责根据给定数据进行分类，predict函数负责在根据给定数据已经完成分类的基础上，对新给定的数据进行类别判别。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kmeans</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, k, max_iter</span>)：</span></span><br><span class="line"><span class="function">    <span class="title">def</span> <span class="title">fit</span>(<span class="params">self, data</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, p_data</span>):</span>             </span><br></pre></td></tr></table></figure>
+<h4 id="构造函数">构造函数</h4>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, k=<span class="number">2</span>, max_iter=<span class="number">300</span></span>):</span></span><br><span class="line">    self.k = k</span><br><span class="line">    self.max_iter = max_iter</span><br></pre></td></tr></table></figure>
+<h4 id="fit函数">fit函数</h4>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fit</span>(<span class="params">self, data</span>):</span></span><br><span class="line">    self.centers = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.k):</span><br><span class="line">        self.centers[i] = data[i]   </span><br><span class="line">        <span class="comment"># 设置k个中心点，挑选输入数据点的前k个作为暂时的中心点</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.max_iter):</span><br><span class="line">        self.clf = &#123;&#125;   <span class="comment"># 存放属于不同类别的数据点</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.k):   <span class="comment"># 创建k个位置，用index代指某个簇</span></span><br><span class="line">            self.clf[i] = []</span><br><span class="line">        <span class="keyword">for</span> feature <span class="keyword">in</span> data:</span><br><span class="line">            distances = []	<span class="comment"># 存放每个数据点到所以中心点的距离</span></span><br><span class="line">            <span class="keyword">for</span> center <span class="keyword">in</span> self.centers:</span><br><span class="line">                distances.append(np.linalg.norm(feature-self.centers[center]))</span><br><span class="line">            classification = distances.index(<span class="built_in">min</span>(distances))    </span><br><span class="line">            <span class="comment"># 记录距离其最小的簇</span></span><br><span class="line">            self.clf[classification].append(feature)    </span><br><span class="line">            <span class="comment"># 将当前数据点分类至与其距离最小的簇</span></span><br><span class="line">        prev_centers = <span class="built_in">dict</span>(self.centers)   </span><br><span class="line">        <span class="comment"># 一次分类完成，重新计算当前分类情况下每个簇的中心点</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> self.clf:</span><br><span class="line">            self.centers[c] = np.average(self.clf[c], axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="predict函数">predict函数</h4>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, p_data</span>):</span></span><br><span class="line">    <span class="keyword">for</span> center <span class="keyword">in</span> self.centers:	<span class="comment"># 计算输入数据点与每个簇的距离</span></span><br><span class="line">    	distances = [np.linalg.norm(p_data - self.centers[center])]</span><br><span class="line">    index = distances.index(<span class="built_in">min</span>(distances))</span><br><span class="line">    <span class="keyword">return</span> index</span><br></pre></td></tr></table></figure>
+<h3 id="给出数据点">给出数据点</h3>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x = np.array([[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">1.5</span>, <span class="number">1.8</span>], [<span class="number">5</span>, <span class="number">8</span>], [<span class="number">8</span>, <span class="number">8</span>], [<span class="number">1</span>, <span class="number">0.6</span>], [<span class="number">9</span>, <span class="number">11</span>]])</span><br></pre></td></tr></table></figure>
+<h3 id="进行kmeans聚类绘图">进行Kmeans聚类、绘图</h3>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">k_means = Kmeans(k=<span class="number">2</span>)</span><br><span class="line">k_means.fit(x)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(k_means.centers)):  <span class="comment"># 用五角星绘制中心点</span></span><br><span class="line">    pyplot.scatter(k_means.centers[i][<span class="number">0</span>], k_means.centers[i][<span class="number">1</span>], marker=<span class="string">&#x27;*&#x27;</span>, s=<span class="number">150</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(k_means.clf)):</span><br><span class="line">    <span class="keyword">for</span> point <span class="keyword">in</span> k_means.clf[i]:  <span class="comment"># 用圆点绘制数据点</span></span><br><span class="line">        pyplot.scatter(point[<span class="number">0</span>], point[<span class="number">1</span>], c=(<span class="string">&#x27;r&#x27;</span> <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;b&#x27;</span>))</span><br><span class="line"></span><br><span class="line">predict = [[<span class="number">2</span>, <span class="number">1</span>], [<span class="number">6</span>, <span class="number">9</span>]]  <span class="comment"># 给出新的数据点，进行预测并用x绘制</span></span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> predict:</span><br><span class="line">    cat = k_means.predict(predict)</span><br><span class="line">    pyplot.scatter(feature[<span class="number">0</span>], feature[<span class="number">1</span>], c=(<span class="string">&#x27;r&#x27;</span> <span class="keyword">if</span> cat == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&#x27;b&#x27;</span>), marker=<span class="string">&#x27;x&#x27;</span>)</span><br><span class="line"></span><br><span class="line">pyplot.show()</span><br></pre></td></tr></table></figure>
+<p>完整代码请<a href="https://github.com/Ubivision/ML-ALgorithms">点击这里</a></p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>分类问题</tag>
+        <tag>无监督学习</tag>
       </tags>
   </entry>
   <entry>
@@ -194,72 +236,6 @@ W=W-alpha*\frac{d C o s t}{d W}
 <p>代码实现如下：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradientDescent</span>(<span class="params">x, y, theta, alpha, num_iters</span>):</span></span><br><span class="line">    m = x.shape[<span class="number">0</span>]</span><br><span class="line">    cost_history = np.zeros(num_iters)</span><br><span class="line">    z = x.dot(theta)</span><br><span class="line">    h = <span class="number">1</span> / (np.exp(-z) + <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_iters):</span><br><span class="line">        theta = theta - alpha/m*np.dot(x.T, (h-y))</span><br><span class="line">        cost_history[i] = cost(x, y, theta)</span><br><span class="line">    <span class="keyword">return</span> theta, cost_history</span><br></pre></td></tr></table></figure>
 <p>完整代码及数据请<a href="https://github.com/Ubivision/ML-ALgorithms">点击这里</a></p>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>分类问题</tag>
-        <tag>监督学习</tag>
-        <tag>判别模型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习总结——感知机</title>
-    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
-    <content><![CDATA[<h2 id="关键字">关键字</h2>
-<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降<span id="more"></span></p>
-<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
-<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
-<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
-<h2 id="感知机学习策略">感知机学习策略</h2>
-<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
--y_i(wx_i+b)&gt;0
-\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
-L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
-\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
-\begin{gathered}
-\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
-\frac{dL}{db}=-\sum_{x_i\in M}y_i
-\end{gathered}
-\]</span></p>
-<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
-<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
-<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
-<p>步骤：</p>
-<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
-<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
-<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
-\begin{gathered}
-w=w+\eta y_ix_i\\
-b=b+\eta y_i
-\end{gathered}
-\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
-<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
-<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
-\begin{gathered}
-w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
-b=\sum_{i=1}^{N}\alpha _iy_i
-\end{gathered}
-\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
-<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
-<p>步骤：</p>
-<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
-<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
-<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
-\begin{gathered}
-\alpha _i = \alpha _i+\eta\\
-b = b+\eta y_i
-\end{gathered}
-\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
-<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
-\begin{gathered}
-\alpha _i = \alpha _i+\eta\\
-代入\alpha _i=n_i\eta：\\
-\alpha = n_i\eta + \eta=\eta (n_i+1)
-\end{gathered}
-\]</span> 就相当于某点被误分类的次数+1。</p>
 ]]></content>
       <categories>
         <category>机器学习</category>
@@ -362,8 +338,74 @@ Gini(p)=2p(1-p)
       </categories>
       <tags>
         <tag>机器学习</tag>
-        <tag>分类问题</tag>
         <tag>回归问题</tag>
+        <tag>分类问题</tag>
+        <tag>监督学习</tag>
+        <tag>判别模型</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习总结——感知机</title>
+    <url>/2021/07/31/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
+    <content><![CDATA[<h2 id="关键字">关键字</h2>
+<p>二分类；线性模型；判别模型；分离超平面；基于误分类的Loss；随机梯度下降<span id="more"></span></p>
+<h2 id="数据集的线性可分性">数据集的线性可分性</h2>
+<p>给定一个只有正负两类的数据集<span class="math inline">\(T\)</span>，如果某个超平面<span class="math inline">\(wx+b=0\)</span>能够将正负两类的实例点完全正确地划分在超平面的两侧，即对于所有正实例，有<span class="math inline">\(wx_i+b&gt;0\)</span>，对所有负实例，有<span class="math inline">\(wx_i+b&lt;0\)</span>​，则称<span class="math inline">\(T\)</span>为线性可分数据集，否则线性不可分。</p>
+<p>只有满足线性可分的数据集，才能使用感知机算法，否则感知机算法将无法收敛。</p>
+<h2 id="感知机学习策略">感知机学习策略</h2>
+<p>对于误分类的数据(<span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>​​)来说，标签<span class="math inline">\(y_i\)</span>和预测结果<span class="math inline">\(wx_i+b\)</span>​​肯定是异号的，满足： <span class="math display">\[
+-y_i(wx_i+b)&gt;0
+\]</span> 所以感知机的损失函数定义为： <span class="math display">\[
+L(w,b)=-\sum_{x_i\in M}y_i(wx_i+b)
+\]</span> 其中M为误分类点集合，误分类点距离超平面越远，损失函数越大。损失函数对<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的偏导分别为： <span class="math display">\[
+\begin{gathered}
+\frac{dL}{dw}=-\sum_{x_i\in M}y_ix_i\\
+\frac{dL}{db}=-\sum_{x_i\in M}y_i
+\end{gathered}
+\]</span></p>
+<h2 id="感知机算法原始形式">感知机算法原始形式</h2>
+<p>输入：训练数据集<span class="math inline">\(T=\)</span>​​{(<span class="math inline">\(x_i, y_i\)</span>​​)}，<span class="math inline">\(i=1,2,...,n\)</span>​；<span class="math inline">\(y_i\in\)</span>​​​​{-1, +1}​，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span>​</p>
+<p>输出：<span class="math inline">\(w,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(wx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.选取初值<span class="math inline">\(w_0,b_0\)</span>；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(wx_i+b)\leq 0\)</span>， <span class="math display">\[
+\begin{gathered}
+w=w+\eta y_ix_i\\
+b=b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<h2 id="感知机算法的对偶形式">感知机算法的对偶形式</h2>
+<p>如果<span class="math inline">\(w,b\)</span>​的初值都为0，通过原始形式的更新方法，设修改<span class="math inline">\(n\)</span>​次<span class="math inline">\(w,b\)</span>​，则<span class="math inline">\(w,b\)</span>​的增量分别是<span class="math inline">\(\alpha _iy_ix_i\)</span>​和<span class="math inline">\(\alpha _i y_i\)</span>​，这里的<span class="math inline">\(\alpha _i=n_i\eta\)</span>​，所以最后学习到的<span class="math inline">\(w,b\)</span>​可以分别表示为： <span class="math display">\[
+\begin{gathered}
+w=\sum_{i=1}^{N}\alpha _iy_yx_i\\
+b=\sum_{i=1}^{N}\alpha _iy_i
+\end{gathered}
+\]</span> 输入：训练数据集<span class="math inline">\(T=\)</span>{(<span class="math inline">\(x_i, y_i\)</span>)}，<span class="math inline">\(i=1,2,...,n\)</span>；<span class="math inline">\(y_i\in\)</span>{-1, +1}，学习率<span class="math inline">\(\eta(0&lt;\eta \leq 1)\)</span></p>
+<p>输出：<span class="math inline">\(\alpha ,b\)</span>​；感知机模型<span class="math inline">\(f(x)=sign(\sum_{j=1}^{N}\alpha y_jx_jx+b)\)</span></p>
+<p>步骤：</p>
+<p>1.<span class="math inline">\(\alpha=0,b=0\)</span>​；</p>
+<p>2.在训练集中选取数据(<span class="math inline">\(x_i,y_i\)</span>)；</p>
+<p>3.如果<span class="math inline">\(y_i(\sum_{j=1}^{N}\alpha y_jx_jx_i+b)\leq 0\)</span>​, <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+b = b+\eta y_i
+\end{gathered}
+\]</span> 则转至第二步，直到训练集中没有误分类点为止。</p>
+<p>第三步中<span class="math inline">\(\alpha _i\)</span>的更新，理解如下： <span class="math display">\[
+\begin{gathered}
+\alpha _i = \alpha _i+\eta\\
+代入\alpha _i=n_i\eta：\\
+\alpha = n_i\eta + \eta=\eta (n_i+1)
+\end{gathered}
+\]</span> 就相当于某点被误分类的次数+1。</p>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>分类问题</tag>
         <tag>监督学习</tag>
         <tag>判别模型</tag>
       </tags>
@@ -467,7 +509,7 @@ P_{\lambda}\left(Y=c_{k}\right)=\frac{\sum_{i=1}^{N} I\left(y_{i}=c_{k}\right)+\
 <p>提升方法（boosting）的基本思路是：将弱可学习算法提升为强可学习算法。在分类问题中，它通过每一轮改变训练样本的权重，学习多个分类器，并将所有分类器进行线性组合，得到一个性能更好的分类器。<span id="more"></span></p>
 <h2 id="adaboost算法">AdaBoost算法</h2>
 <h3 id="基本思路">1.基本思路</h3>
-<p>通过多次训练得到多个弱分类器，在每一次训练后提高被误分类样本的权重，降低被正确分类样本的权重，这样会使得被误分类的样本在后续轮次中受到更大的关注，同时根据分类结果计算当前分类器的权重。在训练轮次结束或者所有样本都被正确分类后，将所有分类器进行线性组合，系数就是每轮训练后得到的分类器权重，从而组合成为一个性能更优的分类器。</p>
+<p>通过多次训练得到多个弱分类器，在每一次训练后提高被误分类样本的权重，降低被正确分类样本的权重，这样会使得被误分类的样本在后续轮次中受到更大的关注，同时根据分类结果计算当前分类器的权重。在所有基分类器都训练结束后，将所有基分类器进行线性组合，系数就是每轮训练后得到的分类器权重，从而组合成为一个性能更优的分类器。</p>
 <h3 id="算法步骤">2.算法步骤</h3>
 <p>输入：训练数据集<span class="math inline">\(T={(x_1,y_1),(x_2,y_2),...,(x_N,y_N)}\)</span>​，其中<span class="math inline">\(x_i\in X\subseteq R^n\)</span>​，<span class="math inline">\(y_i \in Y={-1,+1}\)</span>​；一种弱学习算法；</p>
 <p>输出：最终分类器<span class="math inline">\(G(x)\)</span>。</p>
@@ -617,21 +659,21 @@ f(x)=f_{M}(x)=\sum_{m=1}^{M} \beta_{m} b\left(x ; \gamma_{m}\right)
 f(x)=\sum_{m=1}^{M}\alpha _mG_m(x)
 \]</span> 因为前向分步算法逐一学习基函数，这一过程与AdaBoost算法逐一学习基本分类器的过程一致。</p>
 <p>下面证明前向分步算法的损失函数是指数损失函数<span class="math inline">\(L(y,f(x))=exp[-yf(x)]\)</span>​时，其学习步骤等价于AdaBoost算法的学习步骤：</p>
-<p>假设经过<span class="math inline">\(m-1\)</span>轮迭代前向分步算法已经得到了<span class="math inline">\(f_{m-1}(x)\)</span>，在第<span class="math inline">\(m\)</span>轮迭代得到<span class="math inline">\(\alpha _m\)</span>，<span class="math inline">\(G_m(x)\)</span>，此时<span class="math inline">\(f_m(x)\)</span>可以表达为： <span class="math display">\[
+<p>假设经过<span class="math inline">\(m-1\)</span>轮迭代，前向分步算法已经得到了<span class="math inline">\(f_{m-1}(x)\)</span>，在第<span class="math inline">\(m\)</span>轮迭代得到<span class="math inline">\(\alpha _m\)</span>，<span class="math inline">\(G_m(x)\)</span>，此时<span class="math inline">\(f_m(x)\)</span>可以表达为： <span class="math display">\[
 f_m(x)=f_{m-1}(x)+\alpha _m G_m(x)
 \]</span> 目标是使前向分步算法得到的<span class="math inline">\(\alpha _m\)</span>和<span class="math inline">\(G_m(x)\)</span>使<span class="math inline">\(f_m(x)\)</span>在训练数据集<span class="math inline">\(T\)</span>上的指数损失最小，即 <span class="math display">\[
 \left(\alpha_{m}, G_{m}(x)\right)=\arg \min _{\alpha, G} \sum_{i=1}^{N} \exp \left[-y_{i}\left(f_{m-1}\left(x_{i}\right)+\alpha G\left(x_{i}\right)\right)\right]
-\]</span> 式（36）可以表示为 <span class="math display">\[
+\]</span> 式（30）可以表示为 <span class="math display">\[
 \left(\alpha_{m}, G_{m}(x)\right)=\arg \min _{\alpha, G} \sum_{i=1}^{N} \bar{w}_{m i} \exp \left[-y_{i} \alpha G\left(x_{i}\right)\right]
 \]</span> 其中，<span class="math inline">\(\bar{w}_{m i}=exp[-y_if_{m-1}(x_i)]\)</span>。</p>
-<p>现在证明使得式（37）达到最小的<span class="math inline">\(\alpha _m^*\)</span>和<span class="math inline">\(G_m^*(x)\)</span>就是AdaBoost算法所得到的<span class="math inline">\(\alpha _m\)</span>和<span class="math inline">\(G_m(x)\)</span>，求解式（37）：</p>
+<p>现在证明使得式（31）达到最小的<span class="math inline">\(\alpha _m^*\)</span>和<span class="math inline">\(G_m^*(x)\)</span>就是AdaBoost算法所得到的<span class="math inline">\(\alpha _m\)</span>和<span class="math inline">\(G_m(x)\)</span>，求解式（31）：</p>
 <p><strong>求<span class="math inline">\(G_m^*(x)\)</span>：</strong></p>
-<p>对任意<span class="math inline">\(\alpha &gt;0\)</span>，式（37）可转换为 <span class="math display">\[
+<p>对任意<span class="math inline">\(\alpha &gt;0\)</span>，式（31）可转换为 <span class="math display">\[
 G_{m}^{*}(x)=\arg \min _{G} \sum_{i=1}^{N} \bar{w}_{m i} I\left(y_{i} \neq G\left(x_{i}\right)\right)
-\]</span> 其中，<span class="math inline">\(\bar{w}_{m i}=exp[-y_if_{m-1}(x_i)]\)</span>​。式（38）与式（37）的唯一区别在于，将指数损失函数替换成了指示函数，也就是0/1损失函数，至于为什么可以这么替换，西瓜书P174页给出了证明，简言之，就是说当指数损失函数最小化时，分类错误率也将最小化。这说明指数损失函数是分类任务原本0/1损失函数的替代损失函数。</p>
+\]</span> 其中，<span class="math inline">\(\bar{w}_{m i}=exp[-y_if_{m-1}(x_i)]\)</span>​​。式（32）与式（31）的唯一区别在于，将指数损失函数替换成了指示函数，也就是0/1损失函数，至于为什么可以这么替换，西瓜书P174页给出了证明，简言之，就是说当指数损失函数最小化时，分类错误率也将最小化。这说明指数损失函数是分类任务原本0/1损失函数的替代损失函数。</p>
 <p>此时得到的分类器<span class="math inline">\(G_{m}^{*}(x)\)</span>即为AdaBoost算法的基本分类器<span class="math inline">\(G_{m}(x)\)</span>，因为它是使第<span class="math inline">\(m\)</span>​轮加权训练数据分类误差率最小的基本分类器。</p>
 <p><strong>求<span class="math inline">\(\alpha _m^*\)</span>​：</strong></p>
-<p>式（37）中，当基本分类器正确分类实例时，<span class="math inline">\(y_i\)</span>与<span class="math inline">\(G(x_i)\)</span>同号，否则为异号，所以可以改写为： <span class="math display">\[
+<p>式（31）中，当基本分类器正确分类实例时，<span class="math inline">\(y_i\)</span>与<span class="math inline">\(G(x_i)\)</span>同号，否则为异号，所以可以改写为： <span class="math display">\[
 \sum_{i=1}^{N} \bar{w}_{m i} \exp \left[-y_{i} \alpha G\left(x_{i}\right)\right] =\sum_{y_{i}=G_{m}\left(x_{i}\right)} \bar{w}_{m i} \mathrm{e}^{-\alpha}+\sum_{y_{i} \neq G_{m}\left(x_{i}\right)} \bar{w}_{m i} \mathrm{e}^{\alpha}
 \]</span> 其中每一项还有另一种写法： <span class="math display">\[
 \begin{aligned}
@@ -644,12 +686,12 @@ G_{m}^{*}(x)=\arg \min _{G} \sum_{i=1}^{N} \bar{w}_{m i} I\left(y_{i} \neq G\lef
 e^{-\alpha}\sum_{i=1}^{N}\bar{w}_{m i}I(y_{i} = G\left(x_{i}\right))
 +e^{-\alpha}\sum_{i=1}^{N}\bar{w}_{m i}I(y_{i} \neq G\left(x_{i}\right))
 ={e}^{-\alpha} \sum_{i=1}^{N} \bar{w}_{m i}
-\]</span> 这个很好理解，分错的实例和分对的实例之和，就是全部。所以式（39）可以进一步展开： <span class="math display">\[
+\]</span> 这个很好理解，分错的实例和分对的实例之和，就是全部。所以式（33）可以进一步展开： <span class="math display">\[
 \begin{aligned}
 \sum_{i=1}^{N} \bar{w}_{m i} \exp \left[-y_{i} \alpha G\left(x_{i}\right)\right] &amp;=\sum_{y_{i}=G_{m}\left(x_{i}\right)} \bar{w}_{m i} \mathrm{e}^{-\alpha}+\sum_{y_{i} \neq G_{m}\left(x_{i}\right)} \bar{w}_{m i} \mathrm{e}^{\alpha} \\
 &amp;=\left(\mathrm{e}^{\alpha}-\mathrm{e}^{-\alpha}\right) \sum_{i=1}^{N} \bar{w}_{m i} I\left(y_{i} \neq G\left(x_{i}\right)\right)+\mathrm{e}^{-\alpha} \sum_{i=1}^{N} \bar{w}_{m i}
 \end{aligned}
-\]</span> 将刚才求得的<span class="math inline">\(G_m^*(x)\)</span>代入式（42），对<span class="math inline">\(\alpha\)</span>​​​​求导并使导数为0，就得到了使式（38）​最小的<span class="math inline">\(\alpha\)</span>​： <span class="math display">\[
+\]</span> 将刚才求得的<span class="math inline">\(G_m^*(x)\)</span>​代入式（36），对<span class="math inline">\(\alpha\)</span>​​​​​求导并使导数为0，就得到了使式（31）​最小的<span class="math inline">\(\alpha\)</span>​​： <span class="math display">\[
 \alpha ^*_m=\frac{1}{2}ln\frac{1-e_m}{e_m}
 \]</span></p>
 <p>其中，<span class="math inline">\(e_m\)</span>是分类误差率： <span class="math display">\[
@@ -669,16 +711,16 @@ f_m(x)=f_{m-1}(x)+\alpha _mG_m(x)
 &amp;=exp[-y_if_{m-1}(x_i)-y_i\alpha_mG_m(x)]\\
 &amp;=\bar{w}_{m,i}exp[-y_i\alpha_mG_m(x)]
 \end{aligned}
-\]</span> 所以，式（46）与AdaBoost算法中的样本权值更新相比，只相差规范化因子，因而等价。</p>
-<p>综上内容，可证明当加法模型是基本分类器，损失函数是指数函数时的前向分步算法，即为AdaBoost算法。</p>
+\]</span> 所以，式（40）与AdaBoost算法中的样本权值更新相比，只相差规范化因子，因而等价。</p>
+<p>综上内容，可证明当加法模型的基函数是基本分类器，损失函数是指数函数时的前向分步算法，即为AdaBoost算法。</p>
 <h2 id="提升树">提升树</h2>
 <h3 id="概述-1">1.概述</h3>
 <p>以决策树为基函数的提升方法称为提升树（boosting tree）。对分类问题决策树是二叉分类树，对回归问题决策树是二叉回归树，针对不同基函数的提升树，主要区别在于使用的损失函数不同，比如回归问题使用平方误差损失函数，分类问题使用指数损失函数，以及使用一般损失函数的一般决策问题。对于二分类问题，提升树算法相当于将AdaBoost算法中的基本分类器限制为二叉分类树即可，可以说此时的提升树算法是AdaBoost算法的特例，这里我们主要讨论回归问题的提升树。</p>
 <h3 id="回归问题的提升树算法">2.回归问题的提升树算法</h3>
-<p>己知一个训练数据集<span class="math inline">\(T={(x_1,y_1),(x_2,y_2),...,(x_N,y_N)}\)</span>​，在决策树中已经讨论了回归树的问题。如果将输入空间<span class="math inline">\(X\)</span>​划分为<span class="math inline">\(J\)</span>​个互不相交的区域<span class="math inline">\(R_1,R_2,\cdots ,R_J\)</span>​，并且在每个区域上确定输 出的常量<span class="math inline">\(c_j\)</span>​​那么树可表示为： <span class="math display">\[
+<p>己知一个训练数据集<span class="math inline">\(T={(x_1,y_1),(x_2,y_2),...,(x_N,y_N)}\)</span>​​，在决策树中已经讨论了回归树的问题。如果将输入空间<span class="math inline">\(X\)</span>​​划分为<span class="math inline">\(J\)</span>​​个互不相交的区域<span class="math inline">\(R_1,R_2,\cdots ,R_J\)</span>​​，并且在每个区域上确定输出的常量<span class="math inline">\(c_j\)</span>​​​那么树可表示为： <span class="math display">\[
 T(x ; \Theta)=\sum_{j=1}^{J} c_{j} I\left(x \in R_{j}\right)
 \]</span> 其中，<span class="math inline">\(\Theta=\left\{\left(R_{1}, c_{1}\right),\left(R_{2}, c_{2}\right), \cdots,\left(R_{J}, c_{J}\right)\right\}\)</span>表示树的区域划分和各区域上的常数。<span class="math inline">\(J\)</span>​是回归树的复杂度即叶结点个数。</p>
-<p>回归问题提升树使用以下前向分步算法： <span class="math display">\[
+<p>回归问题提升树使用前向分步算法： <span class="math display">\[
 \begin{aligned}
 &amp;f_{0}(x)=0 \\
 &amp;f_{m}(x)=f_{m-1}(x)+T\left(x ; \Theta_{m}\right), \quad m=1,2, \cdots, M \\
@@ -706,7 +748,7 @@ r_mi=y_i-f_{m-1}(x_i),\quad i=1,2, \cdots, N
 f_{M}(x)=\sum_{m=1}^{M} T\left(x ; \Theta_{m}\right)
 \]</span> 提升树的算法举例详见统计学习方法P168</p>
 <h3 id="梯度提升">3.梯度提升</h3>
-<p>当损失函数是平方损失函数和指数损失函数时，优化比较容易，但对于一般损失函数而言，往往并不容易。梯度提升算，是利用损失函数负梯度作为回归问题提升树算法中的残差近似值，拟合一个回归树。</p>
+<p>这里有个很关键的点需要说明，梯度提升不是梯度上升，梯度提升中的“提升”指的是提升树，梯度提升这个词指的是在提升树算法中运用梯度。而梯度上升指的是需要优化的目标函数取值的上升，这两者是完全不同的概念。当损失函数是平方损失函数和指数损失函数时，优化比较容易，但对于一般损失函数而言，往往并不容易。梯度提升，就是利用损失函数负梯度作为回归问题提升树算法中的残差近似值，拟合一个回归树。</p>
 <p>算法步骤：</p>
 <p>（1）初始化 <span class="math display">\[
 f_{0}(x)=\arg \min _{c} \sum_{i=1}^{N} L\left(y_{i}, c\right)
@@ -714,7 +756,7 @@ f_{0}(x)=\arg \min _{c} \sum_{i=1}^{N} L\left(y_{i}, c\right)
 <p>（2）对<span class="math inline">\(m=1,2,\cdots ,M\)</span>：（相当于M次循环）</p>
 <p>​ （a）对<span class="math inline">\(i=1,2,\cdots ,N\)</span>​​： <span class="math display">\[
 r_{m i}=-\left[\frac{\partial L\left(y_{i}, f\left(x_{i}\right)\right)}{\partial f\left(x_{i}\right)}\right]_{f(x)=f_{m-1}(x)}
-\]</span> ​ 对于平方损失函数，此处的负梯度就是通常说的残差；对于一般损失函数，负梯度是残差的近似值。</p>
+\]</span> 对于平方损失函数，此处的负梯度就是通常说的残差；对于一般损失函数，负梯度是残差的近似值。</p>
 <p>​ （b）对<span class="math inline">\(r_{mi}\)</span>拟合一个回归树，得到第<span class="math inline">\(m\)</span>课树的叶结点区域<span class="math inline">\(R_{mj},j=1,2,\cdots,J\)</span>。</p>
 <p>​ （c）对<span class="math inline">\(j=1,2,\cdots,J\)</span>，计算 <span class="math display">\[
 c_{m j}=\arg \min _{c} \sum_{x_{i} \in R_{m j}} L\left(y_{i}, f_{m-1}\left(x_{i}\right)+c\right)
